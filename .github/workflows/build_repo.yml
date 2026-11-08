@@ -1,0 +1,64 @@
+name: Build and Deploy APT Repo to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dpkg-dev apt-utils gnupg
+
+      - name: Import GPG key
+        env:
+          PRIVATE_GPG_KEY: ${{ secrets.PRIVATE_GPG_KEY }}
+        run: |
+          set -euo pipefail
+          echo "$PRIVATE_GPG_KEY" | gpg --batch --import
+          KEY_ID=$(gpg --list-secret-keys --with-colons | awk -F: '/^fpr/{print $10; exit}')
+          echo "GPG_KEY_ID=$KEY_ID" >> "$GITHUB_ENV"
+
+      - name: Build packages and repo
+        run: ./scripts/build-repo.sh
+
+      - name: Verify signature and package set
+        run: |
+          set -euo pipefail
+          gpg --verify public/dists/termux-learn-crypto/InRelease
+          gpg --verify public/dists/termux-learn-crypto/Release.gpg public/dists/termux-learn-crypto/Release
+          for c in packages/*/DEBIAN/control; do
+            n=$(awk -F': ' '/^Package:/{print $2; exit}' "$c")
+            grep -q "^Package: $n$" public/dists/termux-learn-crypto/main/binary-all/Packages || { echo "missing $n"; exit 1; }
+          done
+          cat public/dists/termux-learn-crypto/main/binary-all/Packages
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

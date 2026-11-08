@@ -1,0 +1,4 @@
+#!/data/data/com.termux/files/usr/bin/sh
+# Light postinst: heavy install happens on first command run.
+echo "[dvwa-android] Installed. Run: dvwa-android  (first run downloads/sets up everything)"
+exit 0

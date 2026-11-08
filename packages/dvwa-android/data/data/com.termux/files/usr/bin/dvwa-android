@@ -1,0 +1,19 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# dvwa-android - download the DVWA APK and open the Android installer
+set -u
+VER="2.1.1"
+URL="https://github.com/termux-learn-crypto/dvwa-android/releases/download/v${VER}/dvwa-native-v${VER}-debug.apk"
+if [ -d "$HOME/storage/downloads" ]; then DEST="$HOME/storage/downloads"; else DEST="$HOME/dvwa-android"; fi
+mkdir -p "$DEST"
+APK="$DEST/dvwa-native-v${VER}-debug.apk"
+if [ ! -s "$APK" ] || [ "${1:-}" = "--force" ]; then
+    echo "[*] Downloading DVWA APK v$VER ..."
+    curl -fL --progress-bar -o "$APK.part" "$URL" && mv "$APK.part" "$APK" || { echo "[x] Download failed" >&2; exit 1; }
+fi
+echo "[+] APK: $APK"
+if command -v termux-open >/dev/null 2>&1; then
+    echo "[*] Opening Android installer (allow 'Install unknown apps' for Termux if asked)..."
+    termux-open "$APK"
+else
+    echo "[!] termux-open not found. Run: pkg install termux-tools"
+fi

@@ -1,0 +1,12 @@
+Package: voicestudio
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: bash, curl, git
+Homepage: https://github.com/termux-learn-crypto/VoiceStudio
+Section: utils
+Priority: optional
+Description: VoiceStudio launcher for Termux
+ Installs VoiceStudio from github.com/termux-learn-crypto/VoiceStudio
+ (termux branch) on first run, then starts it. Web UI on
+ http://127.0.0.1:3900. Commands: voicestudio, voicestudio-update.
