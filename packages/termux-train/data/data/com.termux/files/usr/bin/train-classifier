@@ -1,0 +1,2 @@
+#!/data/data/com.termux/files/usr/bin/bash
+exec python /data/data/com.termux/files/usr/share/termux-train/tt.py classify "$@"

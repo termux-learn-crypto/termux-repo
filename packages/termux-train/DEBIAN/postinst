@@ -1,0 +1,8 @@
+#!/data/data/com.termux/files/usr/bin/sh
+[ "$1" = configure ] || exit 0
+H=/data/data/com.termux/files/home
+if [ -d "$H" ] && [ ! -d "$H/my-ai/samples" ]; then
+  HOME="$H" python /data/data/com.termux/files/usr/share/termux-train/tt.py init >/dev/null 2>&1 || true
+fi
+echo "termux-train ready. Start: my-ai help   (samples in ~/my-ai/samples)"
+exit 0

@@ -79,6 +79,25 @@ Short names: `numpy`, `scipy`, `torch` / `pytorch`, `scikit-learn` / `sklearn`, 
 Update: `apt update && apt upgrade`. Remove: `apt remove <name>` (`apt purge` also deletes `~/VoiceStudio` / `~/dvwa-android`).
 Skip the heavy setup during install (do it later with `*-setup`): `VS_SKIP_SETUP=1 apt install voicestudio`, `PYAUDIO_SKIP_SETUP=1 apt install pyaudio-termux`.
 
+
+## Apna AI train karo / Train your own AI (termux-train)
+
+```bash
+apt install termux-train
+my-ai init        # samples: ~/my-ai/samples (qa.jsonl, spam.csv, mood.csv, kahani.txt)
+my-ai help
+```
+
+| Command | Kya seekhta hai / What it learns | Your data |
+|---|---|---|
+| `train-chat qa.jsonl` | SmolLM2-135M ko apne sawal-jawab (LoRA) | `{"q": "...", "a": "..."}` per line, or CSV `question,answer`, or `Q:`/`A:` text |
+| `train-gpt my.txt --size tiny/small/medium` | Zero se chhota GPT, apne text ke style me | any `.txt` |
+| `train-classifier data.csv` | Spam / mood / category | CSV with `text,label` (or number columns + `label`) |
+| `voice-record LABEL` then `train-voice` | Apni awaz / sounds pehchanna | `~/my-ai/data/voice/<label>/*.wav` |
+
+Use: `my-ai chat NAME`, `my-ai ask NAME "sawal"`, `my-ai gen NAME "shuru"`, `my-ai predict NAME "text"`, `my-ai voice NAME clip.wav` (or `--record`), `my-ai plot NAME`, `my-ai list`.
+Models stay in `~/my-ai/models/` and run offline. Ctrl+C during training saves what is learned so far.
+
 ## Remove repo / Repo hatao
 
 ```bash

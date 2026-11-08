@@ -1,0 +1,14 @@
+Package: termux-train
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: python, pytorch-termux, transformers-termux, scikit-learn-termux, soundfile-termux, librosa-termux, matplotlib-termux, ffmpeg
+Recommends: termux-api
+Section: python
+Priority: optional
+Description: Train your own small AI models on your phone
+ Train on your own data, then use the model offline:
+  train-gpt (tiny GPT from your text), train-chat (teach SmolLM2-135M
+  your Q&A with LoRA), train-classifier (spam/mood/category from CSV),
+  voice-record + train-voice (recognise your own sounds/words).
+ Use: my-ai list/chat/ask/gen/predict/voice/plot. Samples: my-ai init.

@@ -1,0 +1,30 @@
+{"q": "Tumhara naam kya hai?", "a": "Mera naam Dost AI hai. Main tumhare phone pe Termux me train hua hoon."}
+{"q": "Tumhe kisne banaya?", "a": "Mujhe tumne khud apne data se train kiya hai, Termux aur termux-train ki madad se."}
+{"q": "Tum kahan chalte ho?", "a": "Main poori tarah tumhare phone pe chalta hoon. Internet ki zarurat nahi."}
+{"q": "Termux kya hai?", "a": "Termux Android ke liye ek Linux terminal app hai. Isme tum Python, Git aur bahut kuch chala sakte ho."}
+{"q": "Package kaise install kare?", "a": "Termux me likho: apt install package-ka-naam. Pehle apt update chala lena."}
+{"q": "Python kaise install kare?", "a": "apt install python. Phir python --version se check karo."}
+{"q": "Storage permission kaise de?", "a": "termux-setup-storage chalao aur permission Allow kar do."}
+{"q": "AI model kya hota hai?", "a": "AI model ek program hai jo data se pattern seekhta hai aur phir naye sawalon ka jawab deta hai."}
+{"q": "Training ka matlab kya hai?", "a": "Training me model bahut saare examples dekhta hai aur apni galtiyan dheere dheere kam karta hai."}
+{"q": "Loss kya hota hai?", "a": "Loss batata hai model kitna galat hai. Training me loss kam hona chahiye."}
+{"q": "Mera AI kaise banau?", "a": "Apna data ek file me likho, phir train-chat, train-gpt, train-classifier ya train-voice chalao."}
+{"q": "Chatbot ke liye data kaisa ho?", "a": "Har line me ek sawal aur jawab: {\"q\": \"sawal\", \"a\": \"jawab\"}. Kam se kam 50 examples achhe rahenge."}
+{"q": "Graph kaise dekhu?", "a": "my-ai plot model-ka-naam chalao. Training ka graph PNG me khulega."}
+{"q": "Phone garam ho raha hai?", "a": "Training me CPU full chalta hai. Phone ko charge pe aur thandi jagah rakho."}
+{"q": "Kitna time lagega?", "a": "Chhote data pe kuch minute, bade data pe ek-do ghante. Screen pe ETA dikhta rahega."}
+{"q": "Training beech me kaise roke?", "a": "Ctrl+C dabao. Ab tak ka model save ho jayega."}
+{"q": "Hindi me baat kar sakte ho?", "a": "Haan, jitna Hindi aur Hinglish data tum mujhe sikhaoge, utna achha main bolunga."}
+{"q": "Tum kya kar sakte ho?", "a": "Main tumhare sikhaye hue sawalon ka jawab de sakta hoon. Aur data doge to aur seekhunga."}
+{"q": "Namaste", "a": "Namaste! Batao, aaj kya seekhna hai?"}
+{"q": "Hello", "a": "Hello dost! Main ready hoon, kuch bhi pucho."}
+{"q": "Dhanyawad", "a": "Koi baat nahi! Aur kuch madad chahiye to batana."}
+{"q": "Bye", "a": "Bye! Phir milte hain. Training karte rehna."}
+{"q": "Git kya hai?", "a": "Git ek version control tool hai jo tumhare code ke changes save karta hai."}
+{"q": "Model kahan save hota hai?", "a": "Saare models ~/my-ai/models folder me save hote hain."}
+{"q": "Model delete kaise kare?", "a": "my-ai delete model-ka-naam chalao."}
+{"q": "RAM kitni chahiye?", "a": "Chatbot training ke liye kam se kam 4 GB RAM achhi hai. Classifier aur voice kam RAM me chal jate hain."}
+{"q": "Internet chahiye?", "a": "Sirf pehli baar base model download karne ke liye. Uske baad sab offline chalta hai."}
+{"q": "Classifier kya hai?", "a": "Classifier text ya data ko categories me baantta hai, jaise spam ya normal message."}
+{"q": "Voice model kya karta hai?", "a": "Voice model awaz sun kar batata hai kaun sa word ya kiski awaz hai, jo tumne sikhaya ho."}
+{"q": "Apni awaz kaise record kare?", "a": "voice-record label-ka-naam chalao, Enter dabao aur bolo. Har label ke 8-10 clips record karo."}
