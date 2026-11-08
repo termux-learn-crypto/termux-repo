@@ -1,0 +1,11 @@
+Package: scikit-learn-termux
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: python, python-pip, python-numpy, python-scipy, clang, make, ninja, pkg-config, libopenblas, binutils
+Section: python
+Priority: optional
+Description: scikit-learn for Termux - small ML models (chhote ML model)
+ apt installs NumPy, SciPy and the compiler; the install step builds
+ scikit-learn with pip (no Android wheel exists, takes 20-40 min).
+ Commands: sklearn-setup (rebuild), sklearn-check.

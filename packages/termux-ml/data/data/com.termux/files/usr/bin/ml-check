@@ -1,0 +1,12 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# ml-check [module ...] : show which ML Python modules import, with versions
+mods=("$@"); [ ${#mods[@]} -eq 0 ] && mods=(numpy torch sklearn tokenizers transformers)
+rc=0
+for m in "${mods[@]}"; do
+  if out=$(python -c "import $m; print(getattr($m,'__version__','ok'))" 2>/dev/null); then
+    printf '\033[1;32m[+]\033[0m %-13s %s\n' "$m" "$out"
+  else
+    printf '\033[1;31m[x]\033[0m %-13s not importable\n' "$m"; rc=1
+  fi
+done
+exit $rc

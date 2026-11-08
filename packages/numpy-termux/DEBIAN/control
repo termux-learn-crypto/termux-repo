@@ -1,0 +1,10 @@
+Package: numpy-termux
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: python, python-numpy
+Section: python
+Priority: optional
+Description: NumPy for Termux - math and data processing (ganit aur data processing)
+ Installs Termux's prebuilt NumPy (python-numpy, no compiling).
+ Command: numpy-check.

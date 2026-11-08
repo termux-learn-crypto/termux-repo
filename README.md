@@ -46,6 +46,24 @@ apt install dvwa-android     # then: dvwa-android (opens the APK installer)
 | `pyaudio-termux` | 1.1.0 | `start-audio`, `pyaudio-test`, `pyaudio-setup` | apt installs portaudio, pulseaudio, clang, python; install step builds PyAudio ([pyaudio-termux](https://github.com/termux-learn-crypto/pyaudio-termux)). |
 | `dvwa-android` | 2.1.1-1 | `dvwa-android` | Install step downloads the [DVWA Android](https://github.com/termux-learn-crypto/dvwa-android) v2.1.1 APK to `~/dvwa-android`; `dvwa-android` opens the Android installer. |
 
+### Machine learning (ML) packages
+
+```bash
+apt install termux-ml        # sab ek saath / all five at once, then: ml-check
+```
+
+| Package | Kya hai / What | apt installs | Setup during install | Commands |
+| :--- | :--- | :--- | :--- | :--- |
+| `numpy-termux` | NumPy: गणित और डेटा प्रोसेसिंग | `python-numpy` (prebuilt) | none | `numpy-check` |
+| `pytorch-termux` | PyTorch: Neural Network (CPU) | `python-torch` (prebuilt), torchaudio recommended | none | `torch-check` |
+| `scikit-learn-termux` | Scikit-learn: छोटे ML मॉडल | numpy, scipy, clang, ninja, openblas | pip builds scikit-learn (20-40 min, no Android wheel) | `sklearn-check`, `sklearn-setup` |
+| `tokenizers-termux` | Tokenizers: टेक्स्ट को tokens में बदलना | `python-tokenizers` (prebuilt, tur-repo) | none | `tokenizers-check` |
+| `transformers-termux` | Transformers: छोटे भाषा मॉडल | torch, numpy, tokenizers, rust | pip installs transformers 5.x + safetensors (Rust compile 5-15 min) | `transformers-check`, `tiny-llm "prompt"` |
+| `termux-ml` | Bundle of all five | all of the above | - | `ml-check` |
+
+`tiny-llm` runs HuggingFaceTB/SmolLM2-135M-Instruct on CPU (~270 MB download once). Another model: `tiny-llm "Hi" Qwen/Qwen2.5-0.5B-Instruct`.
+`install.sh` enables **tur-repo** too (needed for prebuilt tokenizers). Skip builds: `SKLEARN_SKIP_SETUP=1`, `TRANSFORMERS_SKIP_SETUP=1`.
+
 Update: `apt update && apt upgrade`. Remove: `apt remove <name>` (`apt purge` also deletes `~/VoiceStudio` / `~/dvwa-android`).
 Skip the heavy setup during install (do it later with `*-setup`): `VS_SKIP_SETUP=1 apt install voicestudio`, `PYAUDIO_SKIP_SETUP=1 apt install pyaudio-termux`.
 

@@ -1,0 +1,4 @@
+#!/data/data/com.termux/files/usr/bin/sh
+[ "$1" = configure ] || exit 0
+tokenizers-check || echo "[!] tokenizers import failed"
+exit 0

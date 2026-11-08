@@ -1,0 +1,2 @@
+#!/data/data/com.termux/files/usr/bin/bash
+python -c 'import transformers, tokenizers, torch, safetensors; print("transformers", transformers.__version__, "| tokenizers", tokenizers.__version__, "| torch", torch.__version__)'

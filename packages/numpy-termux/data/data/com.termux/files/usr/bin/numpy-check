@@ -1,0 +1,2 @@
+#!/data/data/com.termux/files/usr/bin/bash
+python -c 'import numpy as np; a=np.arange(6).reshape(2,3); print("NumPy", np.__version__, "| sum", a.sum(), "| dot", (a@a.T).tolist())'

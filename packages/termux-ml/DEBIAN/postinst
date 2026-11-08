@@ -1,0 +1,4 @@
+#!/data/data/com.termux/files/usr/bin/sh
+[ "$1" = configure ] || exit 0
+ml-check || echo "[!] Some modules missing; rerun sklearn-setup / transformers-setup"
+exit 0

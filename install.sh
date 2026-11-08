@@ -17,6 +17,14 @@ command -v curl >/dev/null 2>&1 || { step "Installing curl"; pkg install -y curl
 
 echo -e "${C}termux-learn-crypto repository installer${N}"
 
+step "Enabling tur-repo (Termux User Repository: prebuilt tokenizers etc.)"
+if [ ! -f "$PREFIX/etc/apt/sources.list.d/tur.list" ]; then
+  apt update -y >/dev/null 2>&1 || true
+  apt install -y tur-repo >/dev/null 2>&1 && ok "tur-repo enabled" || echo -e "${Y}[!] tur-repo install failed (tokenizers/transformers need it). Later: apt install tur-repo${N}"
+else
+  ok "tur-repo already enabled"
+fi
+
 step "Adding repository / repo add ho raha hai"
 mkdir -p "$PREFIX/etc/apt/sources.list.d" "$PREFIX/etc/apt/trusted.gpg.d"
 echo "deb [arch=all] ${REPO_URL} ${NAME} main" > "$PREFIX/etc/apt/sources.list.d/${NAME}.list"
@@ -33,3 +41,4 @@ ok "Done! Ab install karo:"
 echo -e "${C}  apt install voicestudio${N}"
 echo -e "${C}  apt install pyaudio-termux${N}"
 echo -e "${C}  apt install dvwa-android${N}"
+echo -e "${C}  apt install termux-ml        # numpy, torch, scikit-learn, tokenizers, transformers${N}"

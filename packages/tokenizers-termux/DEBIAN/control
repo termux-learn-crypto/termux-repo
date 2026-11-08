@@ -1,0 +1,11 @@
+Package: tokenizers-termux
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: python, python-tokenizers
+Section: python
+Priority: optional
+Description: Hugging Face Tokenizers for Termux - text to tokens
+ Installs the prebuilt python-tokenizers from the Termux User
+ Repository (tur-repo, added by this repo's install.sh), so no Rust
+ compile. Command: tokenizers-check.

@@ -1,0 +1,4 @@
+#!/data/data/com.termux/files/usr/bin/sh
+[ "$1" = configure ] || exit 0
+torch-check || echo "[!] torch import failed: apt reinstall python-torch"
+exit 0

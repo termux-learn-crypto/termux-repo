@@ -1,0 +1,10 @@
+#!/data/data/com.termux/files/usr/bin/bash
+python - <<'PY'
+import sklearn
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+X, y = load_iris(return_X_y=True)
+Xtr, Xte, ytr, yte = train_test_split(X, y, random_state=0)
+print(f"scikit-learn {sklearn.__version__} | iris accuracy {LogisticRegression(max_iter=300).fit(Xtr, ytr).score(Xte, yte):.2f}")
+PY

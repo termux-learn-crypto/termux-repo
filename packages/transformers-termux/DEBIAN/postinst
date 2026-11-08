@@ -1,0 +1,7 @@
+#!/data/data/com.termux/files/usr/bin/sh
+[ "$1" = configure ] || exit 0
+if [ "${TRANSFORMERS_SKIP_SETUP:-0}" != 1 ]; then
+  bash /data/data/com.termux/files/usr/share/transformers-termux/setup.sh || echo "[!] transformers setup failed. Retry: transformers-setup"
+fi
+echo "[transformers-termux] Try: tiny-llm \"Hello\""
+exit 0

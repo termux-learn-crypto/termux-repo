@@ -1,0 +1,10 @@
+Package: termux-ml
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: numpy-termux, pytorch-termux, scikit-learn-termux, tokenizers-termux, transformers-termux
+Section: python
+Priority: optional
+Description: Machine learning bundle for Termux
+ One package for NumPy, PyTorch, scikit-learn, Tokenizers and
+ Transformers. Command: ml-check.

@@ -1,0 +1,12 @@
+Package: pytorch-termux
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: python, python-numpy, python-torch
+Recommends: python-torchaudio
+Suggests: python-torchvision
+Section: python
+Priority: optional
+Description: PyTorch for Termux - neural networks (CPU)
+ Installs Termux's prebuilt PyTorch (python-torch, aarch64, no
+ compiling). Command: torch-check (runs a tiny neural network).

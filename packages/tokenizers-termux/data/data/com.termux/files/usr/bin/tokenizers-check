@@ -1,0 +1,10 @@
+#!/data/data/com.termux/files/usr/bin/bash
+python - <<'PY'
+import tokenizers
+from tokenizers import Tokenizer, models, pre_tokenizers, trainers
+tok = Tokenizer(models.BPE(unk_token="[UNK]")); tok.pre_tokenizer = pre_tokenizers.Whitespace()
+tok.train_from_iterator(["namaste duniya", "hello world", "termux pe machine learning"] * 50,
+                        trainers.BpeTrainer(vocab_size=60, special_tokens=["[UNK]"]))
+enc = tok.encode("namaste termux world")
+print("tokenizers", tokenizers.__version__, "|", enc.tokens, enc.ids)
+PY

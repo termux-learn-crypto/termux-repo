@@ -1,0 +1,12 @@
+#!/data/data/com.termux/files/usr/bin/bash
+python - <<'PY'
+import torch, torch.nn as nn
+torch.manual_seed(0)
+net = nn.Sequential(nn.Linear(4, 8), nn.ReLU(), nn.Linear(8, 1))
+x, y = torch.randn(64, 4), torch.randn(64, 1)
+opt = torch.optim.SGD(net.parameters(), lr=0.1)
+l0 = nn.functional.mse_loss(net(x), y).item()
+for _ in range(50):
+    opt.zero_grad(); loss = nn.functional.mse_loss(net(x), y); loss.backward(); opt.step()
+print(f"PyTorch {torch.__version__} | threads {torch.get_num_threads()} | loss {l0:.3f} -> {loss.item():.3f}")
+PY

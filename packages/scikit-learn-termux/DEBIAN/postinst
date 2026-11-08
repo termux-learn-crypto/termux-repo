@@ -1,0 +1,6 @@
+#!/data/data/com.termux/files/usr/bin/sh
+[ "$1" = configure ] || exit 0
+if [ "${SKLEARN_SKIP_SETUP:-0}" != 1 ]; then
+  bash /data/data/com.termux/files/usr/share/scikit-learn-termux/setup.sh || echo "[!] scikit-learn build failed. Retry: sklearn-setup"
+fi
+exit 0

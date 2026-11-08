@@ -1,0 +1,12 @@
+Package: transformers-termux
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: python, python-pip, python-numpy, python-torch, python-tokenizers, rust, clang, make, pkg-config, libyaml
+Section: python
+Priority: optional
+Description: Hugging Face Transformers for Termux - small language models
+ apt installs PyTorch, NumPy, Tokenizers (tur-repo) and Rust; the
+ install step pip-installs transformers, safetensors, huggingface_hub,
+ regex and pyyaml (safetensors compiles with Rust, ~5-15 min).
+ Commands: transformers-setup, transformers-check, tiny-llm "prompt".
