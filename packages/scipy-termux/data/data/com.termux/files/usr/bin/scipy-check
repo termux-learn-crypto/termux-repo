@@ -1,0 +1,10 @@
+#!/data/data/com.termux/files/usr/bin/bash
+python - <<'PY'
+import numpy as np, scipy
+from scipy import signal
+fs = 1000; t = np.arange(0, 1, 1/fs)
+clean = np.sin(2*np.pi*5*t); noisy = clean + 0.5*np.sin(2*np.pi*120*t)
+b, a = signal.butter(4, 20, fs=fs)            # 20 Hz low-pass
+out = signal.filtfilt(b, a, noisy)
+print(f"SciPy {scipy.__version__} | noise error before {np.abs(noisy-clean).mean():.3f} -> after {np.abs(out-clean).mean():.3f}")
+PY

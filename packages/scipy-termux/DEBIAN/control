@@ -1,0 +1,10 @@
+Package: scipy-termux
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: python, python-numpy, python-scipy
+Section: python
+Priority: optional
+Description: SciPy for Termux - signal processing
+ Installs Termux's prebuilt SciPy (python-scipy, no compiling).
+ Command: scipy-check (low-pass filters a noisy signal).

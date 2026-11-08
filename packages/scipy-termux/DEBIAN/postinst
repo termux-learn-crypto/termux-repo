@@ -1,0 +1,4 @@
+#!/data/data/com.termux/files/usr/bin/sh
+[ "$1" = configure ] || exit 0
+scipy-check || echo "[!] scipy import failed"
+exit 0

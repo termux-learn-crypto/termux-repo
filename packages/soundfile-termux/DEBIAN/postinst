@@ -1,0 +1,6 @@
+#!/data/data/com.termux/files/usr/bin/sh
+[ "$1" = configure ] || exit 0
+if [ "${SOUNDFILE_SKIP_SETUP:-0}" != 1 ]; then
+  bash /data/data/com.termux/files/usr/share/soundfile-termux/setup.sh || echo "[!] soundfile-termux setup failed. Retry: soundfile-setup"
+fi
+exit 0

@@ -1,0 +1,4 @@
+#!/data/data/com.termux/files/usr/bin/sh
+[ "$1" = configure ] || exit 0
+matplotlib-check || echo "[!] matplotlib import failed"
+exit 0

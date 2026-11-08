@@ -49,13 +49,16 @@ apt install dvwa-android     # then: dvwa-android (opens the APK installer)
 ### Machine learning (ML) packages
 
 ```bash
-apt install termux-ml        # sab ek saath / all five at once, then: ml-check
+apt install termux-ml        # sab ek saath / everything below, then: ml-check
 
 # short names bhi chalte hain / short names work too:
 apt install numpy torch scikit-learn tokenizers transformers
+apt install scipy soundfile librosa matplotlib
 ```
 
-Short names: `numpy`, `torch` / `pytorch`, `scikit-learn` / `sklearn`, `tokenizers`, `transformers` (each installs its `*-termux` package).
+Short names: `numpy`, `scipy`, `torch` / `pytorch`, `scikit-learn` / `sklearn`, `tokenizers`, `transformers`, `soundfile`, `librosa` (each installs its `*-termux` package). `matplotlib` is Termux's own package; `matplotlib-termux` adds `plot-training`.
+
+`plot-training log.csv` reads a CSV with a header like `epoch,loss,val_loss,acc,val_acc`, saves `~/plots/training.png` and opens it.
 
 | Package | Kya hai / What | apt installs | Setup during install | Commands |
 | :--- | :--- | :--- | :--- | :--- |
@@ -64,10 +67,14 @@ Short names: `numpy`, `torch` / `pytorch`, `scikit-learn` / `sklearn`, `tokenize
 | `scikit-learn-termux` | Scikit-learn: छोटे ML मॉडल | numpy, scipy, clang, ninja, openblas | pip builds scikit-learn (20-40 min, no Android wheel) | `sklearn-check`, `sklearn-setup` |
 | `tokenizers-termux` | Tokenizers: टेक्स्ट को tokens में बदलना | `python-tokenizers` (prebuilt, tur-repo) | none | `tokenizers-check` |
 | `transformers-termux` | Transformers: छोटे भाषा मॉडल | torch, numpy, tokenizers, rust | pip installs transformers 5.x + safetensors (Rust compile 5-15 min) | `transformers-check`, `tiny-llm "prompt"` |
-| `termux-ml` | Bundle of all five | all of the above | - | `ml-check` |
+| `scipy-termux` | SciPy: Signal processing | `python-scipy` (prebuilt) | none | `scipy-check` |
+| `soundfile-termux` | SoundFile: Audio files (wav/flac/ogg) | `libsndfile`, clang | pip installs cffi + soundfile, patched for Android | `soundfile-check`, `soundfile-setup` |
+| `librosa-termux` | librosa: Audio features (MFCC, mel, pitch, tempo) | scipy, llvmlite, soxr, scikit-learn, soundfile, ffmpeg | pip builds numba (10-20 min) + librosa | `librosa-check [file.wav]`, `librosa-setup` |
+| `matplotlib-termux` | Matplotlib: Training graphs | `matplotlib` (prebuilt) | none | `plot-training [log.csv]`, `matplotlib-check` |
+| `termux-ml` | Bundle of everything above | all of the above | - | `ml-check` |
 
 `tiny-llm` runs HuggingFaceTB/SmolLM2-135M-Instruct on CPU (~270 MB download once). Another model: `tiny-llm "Hi" Qwen/Qwen2.5-0.5B-Instruct`.
-`install.sh` enables **tur-repo** too (needed for prebuilt tokenizers). Skip builds: `SKLEARN_SKIP_SETUP=1`, `TRANSFORMERS_SKIP_SETUP=1`.
+`install.sh` enables **tur-repo** too (needed for prebuilt tokenizers). Skip builds: `SKLEARN_SKIP_SETUP=1`, `TRANSFORMERS_SKIP_SETUP=1`, `SOUNDFILE_SKIP_SETUP=1`, `LIBROSA_SKIP_SETUP=1`.
 
 Update: `apt update && apt upgrade`. Remove: `apt remove <name>` (`apt purge` also deletes `~/VoiceStudio` / `~/dvwa-android`).
 Skip the heavy setup during install (do it later with `*-setup`): `VS_SKIP_SETUP=1 apt install voicestudio`, `PYAUDIO_SKIP_SETUP=1 apt install pyaudio-termux`.

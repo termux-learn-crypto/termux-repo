@@ -1,0 +1,14 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# librosa-check [audio-file]  - MFCC / tempo / pitch features (synthetic tone if no file)
+F="${1:-}" python - <<'PY'
+import os, numpy as np, librosa
+f = os.environ.get("F")
+if f: y, sr = librosa.load(f, sr=None); src = f
+else:
+    sr = 22050; y = librosa.tone(440, sr=sr, duration=2.0); src = "440 Hz test tone"
+mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13)
+mel = librosa.feature.melspectrogram(y=y, sr=sr)
+f0 = librosa.yin(y, fmin=50, fmax=1000, sr=sr)
+tempo, _ = librosa.beat.beat_track(y=y, sr=sr)
+print(f"librosa {librosa.__version__} | {src}: {len(y)/sr:.1f}s | MFCC {mfcc.shape} | mel {mel.shape} | pitch ~{np.median(f0):.0f} Hz | tempo {float(np.atleast_1d(tempo)[0]):.0f} BPM")
+PY

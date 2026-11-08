@@ -1,0 +1,9 @@
+Package: librosa
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: librosa-termux
+Section: python
+Priority: optional
+Description: Short name for librosa-termux
+ Installs librosa-termux (apt install librosa works).

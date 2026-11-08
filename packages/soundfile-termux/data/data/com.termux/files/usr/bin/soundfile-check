@@ -1,0 +1,7 @@
+#!/data/data/com.termux/files/usr/bin/bash
+python - <<'PY'
+import numpy as np, soundfile as sf, os, tempfile
+sr = 16000; t = np.arange(sr)/sr; tone = 0.3*np.sin(2*np.pi*440*t)
+p = os.path.join(tempfile.gettempdir(), "sf_check.wav"); sf.write(p, tone, sr)
+d, r = sf.read(p); print(f"soundfile {sf.__version__} | wrote+read {p}: {len(d)} samples @ {r} Hz")
+PY

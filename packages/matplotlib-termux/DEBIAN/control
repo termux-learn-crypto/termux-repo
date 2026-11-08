@@ -1,0 +1,12 @@
+Package: matplotlib-termux
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: python, python-numpy, matplotlib
+Recommends: termux-tools
+Section: python
+Priority: optional
+Description: Matplotlib for Termux - training graphs
+ Installs Termux's prebuilt matplotlib (no compiling) plus
+ plot-training: draws loss/accuracy graphs to PNG and opens them.
+ Commands: matplotlib-check, plot-training [log.csv].

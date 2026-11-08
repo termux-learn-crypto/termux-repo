@@ -1,0 +1,9 @@
+Package: scipy
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: scipy-termux
+Section: python
+Priority: optional
+Description: Short name for scipy-termux
+ Installs scipy-termux (apt install scipy works).

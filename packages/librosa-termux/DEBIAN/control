@@ -1,0 +1,11 @@
+Package: librosa-termux
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: python, python-pip, python-numpy, python-scipy, python-llvmlite, python-soxr, python-msgpack, scikit-learn-termux, soundfile-termux, ffmpeg, clang, make
+Section: python
+Priority: optional
+Description: librosa for Termux - audio features (MFCC, mel, tempo)
+ apt installs NumPy, SciPy, llvmlite, soxr, scikit-learn and SoundFile;
+ the install step builds numba with pip (10-20 min) and installs
+ librosa. Commands: librosa-setup, librosa-check.

@@ -1,0 +1,9 @@
+Package: soundfile
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: soundfile-termux
+Section: python
+Priority: optional
+Description: Short name for soundfile-termux
+ Installs soundfile-termux (apt install soundfile works).

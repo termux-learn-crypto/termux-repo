@@ -1,0 +1,11 @@
+Package: soundfile-termux
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: python, python-pip, python-numpy, libsndfile, libffi, clang, make, pkg-config
+Section: python
+Priority: optional
+Description: SoundFile for Termux - read/write audio files (wav, flac, ogg)
+ apt installs libsndfile; the install step pip-installs cffi + soundfile
+ and patches soundfile to find libsndfile on Android (sys.platform
+ 'android' on Python 3.13+). Commands: soundfile-setup, soundfile-check.
