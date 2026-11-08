@@ -1,18 +1,9 @@
 #!/data/data/com.termux/files/usr/bin/bash
-# voicestudio - first run installs VoiceStudio, later runs just start it.
-set -u
+# voicestudio - start VoiceStudio (UI: http://127.0.0.1:3900)
 APP_DIR="${VS_DIR:-$HOME/VoiceStudio}"
-INSTALLER="https://raw.githubusercontent.com/termux-learn-crypto/VoiceStudio/termux/termux/install.sh"
-
-install_vs() {
-    echo "[*] Installing VoiceStudio into $APP_DIR (first run, thoda time lagega)..."
-    curl -fsSL "$INSTALLER" | bash || { echo "[x] VoiceStudio install failed" >&2; exit 1; }
-}
-
 case "${1:-}" in
-    --update|update) install_vs; exit 0 ;;
-    --help|-h) echo "Usage: voicestudio [update]  (UI: http://127.0.0.1:3900)"; exit 0 ;;
+  update|--update|setup) exec voicestudio-setup ;;
+  -h|--help) echo "Usage: voicestudio [update]   UI: http://127.0.0.1:3900"; exit 0 ;;
 esac
-
-[ -x "$APP_DIR/termux/run.sh" ] || [ -f "$APP_DIR/termux/run.sh" ] || install_vs
+[ -f "$APP_DIR/termux/run.sh" ] && [ -d "$APP_DIR/.venv-termux" ] || voicestudio-setup || exit 1
 exec bash "$APP_DIR/termux/run.sh" "$@"

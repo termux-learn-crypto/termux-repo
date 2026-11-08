@@ -1,13 +1,11 @@
 Package: dvwa-android
-Version: 2.1.1
+Version: 2.1.1-1
 Architecture: all
 Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
-Depends: bash, curl
-Recommends: termux-tools
+Depends: bash, curl, termux-tools
 Homepage: https://github.com/termux-learn-crypto/dvwa-android
 Section: utils
 Priority: optional
-Description: Downloads and opens the DVWA Android APK
- Fetches dvwa-native v2.1.1 APK from GitHub releases into
- ~/storage/downloads (or ~/dvwa-android) and opens the Android
- installer with termux-open. Command: dvwa-android.
+Description: DVWA Android APK (v2.1.1) downloader and installer
+ Downloads the dvwa-native v2.1.1 APK during apt install into
+ ~/dvwa-android. Run dvwa-android to open the Android installer.

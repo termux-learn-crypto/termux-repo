@@ -1,4 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/sh
-# Light postinst: heavy install happens on first command run.
-echo "[voicestudio] Installed. Run: voicestudio  (first run downloads/sets up everything)"
+[ "$1" = configure ] || exit 0
+if [ "${VS_SKIP_SETUP:-0}" != 1 ]; then
+  bash /data/data/com.termux/files/usr/share/voicestudio/setup.sh \
+    || echo "[!] VoiceStudio setup did not finish. Retry with: voicestudio-setup"
+fi
+echo "[voicestudio] Run: voicestudio   then open http://127.0.0.1:3900"
 exit 0

@@ -30,20 +30,24 @@ apt update
 
 ## Packages install karo / Install packages
 
+Sab kuch `apt` se install hota hai: dependencies apt laata hai, aur setup install ke time hi ho jata hai.
+Everything installs through `apt`: dependencies come from the Termux repos and the setup runs during install.
+
 ```bash
-pkg update
-pkg install voicestudio      # then: voicestudio
-pkg install pyaudio-termux   # then: start-audio ; pyaudio-test
-pkg install dvwa-android     # then: dvwa-android
+apt update
+apt install voicestudio      # then: voicestudio  -> http://127.0.0.1:3900
+apt install pyaudio-termux   # then: start-audio ; pyaudio-test
+apt install dvwa-android     # then: dvwa-android (opens the APK installer)
 ```
 
-| Package | Commands | Kya karta hai / What it does |
-| :--- | :--- | :--- |
-| `voicestudio` | `voicestudio`, `voicestudio-update` | First run installs [VoiceStudio](https://github.com/termux-learn-crypto/VoiceStudio) (termux branch) into `~/VoiceStudio`, then starts it. UI: http://127.0.0.1:3900 |
-| `pyaudio-termux` | `pyaudio-setup`, `start-audio`, `pyaudio-test` | Builds PyAudio on Termux (no root) with [pyaudio-termux](https://github.com/termux-learn-crypto/pyaudio-termux); PulseAudio speaker + mic helper and test |
-| `dvwa-android` | `dvwa-android` | Downloads the [DVWA Android](https://github.com/termux-learn-crypto/dvwa-android) v2.1.1 APK and opens the installer via `termux-open` |
+| Package | Version | Commands | Kya karta hai / What it does |
+| :--- | :--- | :--- | :--- |
+| `voicestudio` | 1.1.0 | `voicestudio`, `voicestudio-setup` | apt installs python, torch, torchaudio, ffmpeg, rust etc.; install step clones [VoiceStudio](https://github.com/termux-learn-crypto/VoiceStudio) (termux branch) into `~/VoiceStudio` with venv + web UI. First install 15-30 min (pydantic-core Rust compile) - phone charge pe rakho. |
+| `pyaudio-termux` | 1.1.0 | `start-audio`, `pyaudio-test`, `pyaudio-setup` | apt installs portaudio, pulseaudio, clang, python; install step builds PyAudio ([pyaudio-termux](https://github.com/termux-learn-crypto/pyaudio-termux)). |
+| `dvwa-android` | 2.1.1-1 | `dvwa-android` | Install step downloads the [DVWA Android](https://github.com/termux-learn-crypto/dvwa-android) v2.1.1 APK to `~/dvwa-android`; `dvwa-android` opens the Android installer. |
 
-Packages are light wrappers: `apt install` is instant, the heavy download/build happens the first time you run the command.
+Update: `apt update && apt upgrade`. Remove: `apt remove <name>` (`apt purge` also deletes `~/VoiceStudio` / `~/dvwa-android`).
+Skip the heavy setup during install (do it later with `*-setup`): `VS_SKIP_SETUP=1 apt install voicestudio`, `PYAUDIO_SKIP_SETUP=1 apt install pyaudio-termux`.
 
 ## Remove repo / Repo hatao
 

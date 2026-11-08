@@ -1,4 +1,2 @@
 #!/data/data/com.termux/files/usr/bin/bash
-# pyaudio-setup - (re)run the pyaudio-termux installer
-set -u
-curl -fsSL "https://raw.githubusercontent.com/termux-learn-crypto/pyaudio-termux/main/install.sh" | bash
+exec bash /data/data/com.termux/files/usr/share/pyaudio-termux/setup.sh "$@"

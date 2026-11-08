@@ -1,8 +1,3 @@
 #!/data/data/com.termux/files/usr/bin/bash
-# pyaudio-test - record/playback test (installs pyaudio-termux on first run)
-set -u
-DIR="${PYAUDIO_TERMUX_DIR:-$HOME/pyaudio-termux}"
-if [ ! -f "$DIR/test_audio.py" ] || ! python -c "import pyaudio" >/dev/null 2>&1; then
-    pyaudio-setup || exit 1
-fi
-exec python "$DIR/test_audio.py" "$@"
+python -c 'import pyaudio' >/dev/null 2>&1 || pyaudio-setup || exit 1
+exec python /data/data/com.termux/files/usr/share/pyaudio-termux/test_audio.py "$@"

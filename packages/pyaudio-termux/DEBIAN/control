@@ -1,12 +1,13 @@
 Package: pyaudio-termux
-Version: 1.0.0
+Version: 1.1.0
 Architecture: all
 Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
-Depends: bash, curl
+Depends: bash, curl, python, python-pip, clang, make, pkg-config, portaudio, pulseaudio
+Recommends: termux-api
 Homepage: https://github.com/termux-learn-crypto/pyaudio-termux
 Section: utils
 Priority: optional
 Description: PyAudio on Termux (no root) with PulseAudio helpers
- On first run builds PyAudio against Termux portaudio using the
- installer from github.com/termux-learn-crypto/pyaudio-termux.
- Commands: pyaudio-setup, start-audio, pyaudio-test.
+ apt installs portaudio, pulseaudio, python and the compiler, then
+ builds PyAudio during install. Commands: start-audio, pyaudio-test,
+ pyaudio-setup (rebuild).

@@ -1,6 +1,3 @@
 #!/data/data/com.termux/files/usr/bin/bash
-# start-audio - start PulseAudio for speaker + mic (installs pyaudio-termux on first run)
-set -u
-DIR="${PYAUDIO_TERMUX_DIR:-$HOME/pyaudio-termux}"
-[ -f "$DIR/start-audio.sh" ] || pyaudio-setup || exit 1
-exec bash "$DIR/start-audio.sh" "$@"
+# Start PulseAudio for speaker + mic. Use "source start-audio" to keep env vars in your shell.
+. /data/data/com.termux/files/usr/share/pyaudio-termux/start-audio.sh "$@"

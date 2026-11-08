@@ -1,4 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/sh
-# Light postinst: heavy install happens on first command run.
-echo "[pyaudio-termux] Installed. Run: start-audio, then pyaudio-test  (first run downloads/sets up everything)"
+[ "$1" = configure ] || exit 0
+if [ "${PYAUDIO_SKIP_SETUP:-0}" != 1 ]; then
+  bash /data/data/com.termux/files/usr/share/pyaudio-termux/setup.sh \
+    || echo "[!] PyAudio build failed. Fix and retry with: pyaudio-setup"
+fi
+echo "[pyaudio-termux] Ready. Run: start-audio ; pyaudio-test"
 exit 0

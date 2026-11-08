@@ -28,7 +28,8 @@ Description: One-line summary
 3. Rules / Niyam:
    - Script packages use `Architecture: all`.
    - Shebang: `#!/data/data/com.termux/files/usr/bin/bash`.
-   - Heavy downloads/builds go in the command's first run, not in `postinst`.
+   - System deps go in `Depends:` (apt installs them). Never call `pkg`/`apt` inside `postinst` (apt lock is held).
+   - Extra setup (git clone, pip build, downloads) goes in `usr/share/<name>/setup.sh`, called from `postinst` (`[ "$1" = configure ]`), non-fatal (`|| echo retry with <name>-setup`; `exit 0`).
    - Update ho to `Version` badhao (e.g. 1.0.0 -> 1.0.1), warna users ko update nahi milega.
 
 4. Local test (Linux/WSL with dpkg-dev, apt-utils):

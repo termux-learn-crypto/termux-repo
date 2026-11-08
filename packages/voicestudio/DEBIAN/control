@@ -1,12 +1,17 @@
 Package: voicestudio
-Version: 1.0.0
+Version: 1.1.0
 Architecture: all
 Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
-Depends: bash, curl, git
+Depends: bash, curl, git, python, python-pip, ffmpeg, clang, binutils, make, cmake, pkg-config, libsndfile, portaudio, libffi, openssl, libxml2, libxslt, zlib, libjpeg-turbo, libpng, rust, python-numpy, python-scipy, python-pillow, python-cryptography, python-psutil, python-torch, python-torchaudio
+Recommends: python-onnxruntime, termux-api
+Suggests: python-torchvision
 Homepage: https://github.com/termux-learn-crypto/VoiceStudio
-Section: utils
+Section: sound
 Priority: optional
-Description: VoiceStudio launcher for Termux
- Installs VoiceStudio from github.com/termux-learn-crypto/VoiceStudio
- (termux branch) on first run, then starts it. Web UI on
- http://127.0.0.1:3900. Commands: voicestudio, voicestudio-update.
+Description: VoiceStudio (TTS / voice studio) for Termux, CPU only
+ apt installs python, torch, ffmpeg, rust and the other system
+ dependencies; the install step then clones VoiceStudio (termux
+ branch) into ~/VoiceStudio and sets up its Python venv and web UI.
+ First install can take 15-30 min (pydantic-core compiles with Rust).
+ Commands: voicestudio (start, UI on http://127.0.0.1:3900),
+ voicestudio-setup (update / repair).

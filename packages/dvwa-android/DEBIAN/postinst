@@ -1,4 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/sh
-# Light postinst: heavy install happens on first command run.
-echo "[dvwa-android] Installed. Run: dvwa-android  (first run downloads/sets up everything)"
+[ "$1" = configure ] || exit 0
+dvwa-android --download-only || echo "[!] APK download failed; it will retry when you run: dvwa-android"
+echo "[dvwa-android] Ready. Run: dvwa-android  (opens the Android installer)"
 exit 0
