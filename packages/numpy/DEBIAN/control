@@ -1,0 +1,9 @@
+Package: numpy
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: numpy-termux
+Section: python
+Priority: optional
+Description: Short name for numpy-termux
+ Installs numpy-termux (apt install numpy works).

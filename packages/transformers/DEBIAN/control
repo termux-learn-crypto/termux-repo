@@ -1,0 +1,9 @@
+Package: transformers
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: transformers-termux
+Section: python
+Priority: optional
+Description: Short name for transformers-termux
+ Installs transformers-termux (apt install transformers works).

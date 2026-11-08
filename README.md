@@ -50,7 +50,12 @@ apt install dvwa-android     # then: dvwa-android (opens the APK installer)
 
 ```bash
 apt install termux-ml        # sab ek saath / all five at once, then: ml-check
+
+# short names bhi chalte hain / short names work too:
+apt install numpy torch scikit-learn tokenizers transformers
 ```
+
+Short names: `numpy`, `torch` / `pytorch`, `scikit-learn` / `sklearn`, `tokenizers`, `transformers` (each installs its `*-termux` package).
 
 | Package | Kya hai / What | apt installs | Setup during install | Commands |
 | :--- | :--- | :--- | :--- | :--- |

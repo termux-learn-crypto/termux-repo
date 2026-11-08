@@ -1,0 +1,9 @@
+Package: pytorch
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: pytorch-termux
+Section: python
+Priority: optional
+Description: Short name for pytorch-termux
+ Installs pytorch-termux (apt install pytorch works).
