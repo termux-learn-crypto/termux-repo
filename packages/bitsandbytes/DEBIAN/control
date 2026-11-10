@@ -1,0 +1,9 @@
+Package: bitsandbytes
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: bitsandbytes-termux
+Section: python
+Priority: optional
+Description: Short name for bitsandbytes-termux
+ Installs bitsandbytes-termux (apt install bitsandbytes works).

@@ -1,0 +1,15 @@
+Package: bitsandbytes-termux
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: glibc-repo, glibc-runner, python-glibc, python-pip-glibc
+Section: python
+Priority: optional
+Description: bitsandbytes for Termux - k-bit model quantization (CPU)
+ Termux (bionic) has no bitsandbytes wheels (last pure-Python release
+ 0.42, no CPU support). The PyPI aarch64 manylinux wheels need glibc
+ and the 0.46+ CPU kernels run on aarch64 CPU. This installs the
+ glibc toolchain, a glibc Python 3.12, torch (CPU) and bitsandbytes
+ into it; your python3 (bionic) is untouched. Commands: bnb-python,
+ bnb-check, bnb-setup. Set BNB_SKIP_SETUP=1 during apt install to skip
+ the setup (run bnb-setup later); BNB_VERSION=0.50.2 pins bitsandbytes.

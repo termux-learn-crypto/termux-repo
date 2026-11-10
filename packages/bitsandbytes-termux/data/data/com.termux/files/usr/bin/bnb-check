@@ -1,0 +1,38 @@
+#!/data/data/com.termux/files/usr/bin/bash
+PREFIX="${PREFIX:-/data/data/com.termux/files/usr}"
+GLIBCPY="${GLIBC_PYTHON:-$PREFIX/glibc/bin/python3}"
+GRUN="$PREFIX/bin/grun"
+[ -x "$GRUN" ] && [ -x "$GLIBCPY" ] || { echo "[x] glibc python not installed - run: apt install python-glibc" >&2; exit 1; }
+TMPD="$(mktemp -d)"
+cat > "$TMPD/bnb_check.py" <<'PY'
+import torch
+import bitsandbytes as bnb
+
+print(f"bitsandbytes {bnb.__version__} | torch {torch.__version__}")
+
+try:
+    import bitsandbytes.functional as F
+    t = torch.randn(4, 16)
+    if hasattr(F, "quantize_blockwise"):
+        q, absmax = F.quantize_blockwise(t)
+        deq = F.dequantize_blockwise(q, absmax)
+        print(f"blockwise quantize/dequantize ok, max err {float((t - deq).abs().max()):.4f}")
+    else:
+        print("quantize_blockwise not in this build - import ok, skipping op smoke test")
+except Exception as e:
+    print(f"[!] quantization op smoke test failed: {e}")
+
+try:
+    import bitsandbytes.optim as O
+    have = [n for n in ("AdamW8bit", "PagedAdamW8bit") if hasattr(O, n)]
+    print("8-bit optimizers:", ", ".join(have) if have else "none found")
+except Exception as e:
+    print(f"[!] optimizers import failed: {e}")
+
+import bitsandbytes.nn  # noqa
+print("bitsandbytes.nn ok")
+PY
+"$GRUN" "$GLIBCPY" "$TMPD/bnb_check.py"
+rc=$?
+rm -rf "$TMPD"
+exit $rc

@@ -1,0 +1,6 @@
+#!/data/data/com.termux/files/usr/bin/sh
+[ "$1" = configure ] || exit 0
+if [ "${BNB_SKIP_SETUP:-0}" != 1 ]; then
+  bash /data/data/com.termux/files/usr/share/bitsandbytes-termux/setup.sh || echo "[!] bitsandbytes-termux setup failed. Retry: bnb-setup"
+fi
+exit 0
