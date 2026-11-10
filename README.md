@@ -51,14 +51,14 @@ apt install dvwa-android     # then: dvwa-android (opens the APK installer)
 ### Machine learning (ML) packages
 
 ```bash
-apt install termux-ml        # sab ek saath / everything below, then: ml-check
+apt install termux-ml        # sab ek saath / everything below (incl. PEFT), then: ml-check
 
 # short names bhi chalte hain / short names work too:
-apt install numpy torch scikit-learn tokenizers transformers
+apt install numpy torch scikit-learn tokenizers transformers peft
 apt install scipy soundfile librosa matplotlib tensorflow
 ```
 
-Short names: `numpy`, `scipy`, `torch` / `pytorch`, `scikit-learn` / `sklearn`, `tokenizers`, `transformers`, `soundfile`, `librosa`, `tensorflow` (each installs its `*-termux` package). `matplotlib` is Termux's own package; `matplotlib-termux` adds `plot-training`.
+Short names: `numpy`, `scipy`, `torch` / `pytorch`, `scikit-learn` / `sklearn`, `tokenizers`, `transformers`, `peft`, `soundfile`, `librosa`, `tensorflow` (each installs its `*-termux` package). `matplotlib` is Termux's own package; `matplotlib-termux` adds `plot-training`.
 
 `plot-training log.csv` reads a CSV with a header like `epoch,loss,val_loss,acc,val_acc`, saves `~/plots/training.png` and opens it.
 
@@ -69,6 +69,7 @@ Short names: `numpy`, `scipy`, `torch` / `pytorch`, `scikit-learn` / `sklearn`, 
 | `scikit-learn-termux` | Scikit-learn: छोटे ML मॉडल | numpy, scipy, clang, ninja, openblas | pip builds scikit-learn (20-40 min, no Android wheel) | `sklearn-check`, `sklearn-setup` |
 | `tokenizers-termux` | Tokenizers: टेक्स्ट को tokens में बदलना | `python-tokenizers` (prebuilt, tur-repo) | none | `tokenizers-check` |
 | `transformers-termux` | Transformers: छोटे भाषा मॉडल | torch, numpy, tokenizers, rust | pip installs transformers 5.x + safetensors (Rust compile 5-15 min) | `transformers-check`, `tiny-llm "prompt"` |
+| `peft-termux` | PEFT: LoRA / parameter-efficient fine-tuning | torch, transformers, rust, python-psutil | pip installs accelerate (pure) + peft; safetensors already built by transformers-termux | `peft-check`, `peft-setup` |
 | `scipy-termux` | SciPy: Signal processing | `python-scipy` (prebuilt) | none | `scipy-check` |
 | `soundfile-termux` | SoundFile: Audio files (wav/flac/ogg) | `libsndfile`, clang | pip installs cffi + soundfile, patched for Android | `soundfile-check`, `soundfile-setup` |
 | `librosa-termux` | librosa: Audio features (MFCC, mel, pitch, tempo) | scipy, llvmlite, soxr, scikit-learn, soundfile, ffmpeg | pip builds numba (10-20 min) + librosa | `librosa-check [file.wav]`, `librosa-setup` |
@@ -79,7 +80,7 @@ Short names: `numpy`, `scipy`, `torch` / `pytorch`, `scikit-learn` / `sklearn`, 
 `tensorflow-termux` bionic `python3` me **import nahi hota** — bionic ke liye TensorFlow wheels hain hi nahi, aur PyPI wala aarch64 wheel glibc chahta hai. `install.sh` **termux-glibc** repo enable karta hai (jaise tur-repo); apt glibc Python 3.12 laata hai, aur `pip install tensorflow` wahan chalta hai. Use: `tf-python my_model.py` (`python3` ki jagah) — ya apne scripts me glibc python path. Note: `grun` arguments ko spaces pe split karta hai, isliye `-c '...'` ke bajaye script file do. Skip the download: `TF_SKIP_SETUP=1 apt install tensorflow-termux`, fir baad me `tensorflow-setup` (pin version: `TF_VERSION=2.21.0 tensorflow-setup`).
 
 `tiny-llm` runs HuggingFaceTB/SmolLM2-135M-Instruct on CPU (~270 MB download once). Another model: `tiny-llm "Hi" Qwen/Qwen2.5-0.5B-Instruct`.
-`install.sh` enables **tur-repo** (prebuilt tokenizers) and **termux-glibc** (tensorflow-termux) too. Skip builds: `SKLEARN_SKIP_SETUP=1`, `TRANSFORMERS_SKIP_SETUP=1`, `SOUNDFILE_SKIP_SETUP=1`, `LIBROSA_SKIP_SETUP=1`, `TF_SKIP_SETUP=1`.
+`install.sh` enables **tur-repo** (prebuilt tokenizers) and **termux-glibc** (tensorflow-termux) too. Skip builds: `SKLEARN_SKIP_SETUP=1`, `TRANSFORMERS_SKIP_SETUP=1`, `SOUNDFILE_SKIP_SETUP=1`, `LIBROSA_SKIP_SETUP=1`, `TF_SKIP_SETUP=1`, `PEFT_SKIP_SETUP=1`.
 
 Update: `apt update && apt upgrade`. Remove: `apt remove <name>` (`apt purge` also deletes `~/VoiceStudio` / `~/dvwa-android`).
 Skip the heavy setup during install (do it later with `*-setup`): `VS_SKIP_SETUP=1 apt install voicestudio`, `PYAUDIO_SKIP_SETUP=1 apt install pyaudio-termux`.

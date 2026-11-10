@@ -1,0 +1,21 @@
+#!/data/data/com.termux/files/usr/bin/bash
+python - <<'PY'
+import torch, torch.nn as nn
+import peft, transformers, accelerate
+from peft import LoraConfig, get_peft_model
+
+class Tiny(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.linear = nn.Linear(8, 2)
+    def forward(self, x):
+        return self.linear(x)
+
+model = get_peft_model(Tiny(), LoraConfig(r=4, lora_alpha=8, target_modules=["linear"], lora_dropout=0.0))
+out = model(torch.randn(4, 8)).sum()
+out.backward()
+trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
+all_params = sum(p.numel() for p in model.parameters())
+print(f"peft {peft.__version__} | transformers {transformers.__version__} | accelerate {accelerate.__version__} | torch {torch.__version__}")
+print(f"LoRA ok: out={out:.3f} | trainable {trainable}/{all_params} ({100*trainable/all_params:.1f}%)")
+PY

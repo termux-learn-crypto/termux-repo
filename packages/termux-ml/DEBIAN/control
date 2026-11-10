@@ -1,10 +1,10 @@
 Package: termux-ml
-Version: 1.1.0
+Version: 1.2.0
 Architecture: all
 Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
-Depends: numpy-termux, scipy-termux, pytorch-termux, scikit-learn-termux, tokenizers-termux, transformers-termux, soundfile-termux, librosa-termux, matplotlib-termux
+Depends: numpy-termux, scipy-termux, pytorch-termux, scikit-learn-termux, tokenizers-termux, transformers-termux, peft-termux, soundfile-termux, librosa-termux, matplotlib-termux
 Section: python
 Priority: optional
 Description: Machine learning bundle for Termux
  One package for NumPy, SciPy, PyTorch, scikit-learn, Tokenizers,
- Transformers, SoundFile, librosa and Matplotlib. Command: ml-check.
+ Transformers, PEFT, SoundFile, librosa and Matplotlib. Command: ml-check.

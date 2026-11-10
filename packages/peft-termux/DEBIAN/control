@@ -1,0 +1,14 @@
+Package: peft-termux
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: pytorch-termux, transformers-termux, python-pip, rust, python-psutil
+Section: python
+Priority: optional
+Description: PEFT (Parameter-Efficient Fine-Tuning) for Termux
+ LoRA and other parameter-efficient methods for fine-tuning
+ HuggingFace models on a phone (CPU). apt installs torch, transformers
+ (safetensors compiled with Rust), rust and psutil; the install step
+ pip-installs accelerate and peft. Commands: peft-check, peft-setup.
+ Set PEFT_SKIP_SETUP=1 during apt install to skip the setup (run
+ peft-setup later).

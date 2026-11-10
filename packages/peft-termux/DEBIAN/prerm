@@ -1,0 +1,4 @@
+#!/data/data/com.termux/files/usr/bin/sh
+[ "$1" = remove ] || exit 0
+python -m pip uninstall -y peft >/dev/null 2>&1
+exit 0

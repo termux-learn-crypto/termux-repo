@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 # ml-check [module ...] : show which ML Python modules import, with versions
-mods=("$@"); [ ${#mods[@]} -eq 0 ] && mods=(numpy scipy torch sklearn tokenizers transformers soundfile librosa matplotlib)
+mods=("$@"); [ ${#mods[@]} -eq 0 ] && mods=(numpy scipy torch sklearn tokenizers transformers peft soundfile librosa matplotlib)
 rc=0
 for m in "${mods[@]}"; do
   if out=$(python -c "import $m; print(getattr($m,'__version__','ok'))" 2>/dev/null); then

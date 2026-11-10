@@ -1,0 +1,6 @@
+#!/data/data/com.termux/files/usr/bin/sh
+[ "$1" = configure ] || exit 0
+if [ "${PEFT_SKIP_SETUP:-0}" != 1 ]; then
+  bash /data/data/com.termux/files/usr/share/peft-termux/setup.sh || echo "[!] peft-termux setup failed. Retry: peft-setup"
+fi
+exit 0
