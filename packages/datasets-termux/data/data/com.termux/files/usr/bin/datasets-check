@@ -1,0 +1,10 @@
+#!/data/data/com.termux/files/usr/bin/bash
+python - <<'PY'
+import datasets
+from datasets import Dataset
+
+ds = Dataset.from_dict({"text": ["hello", "world", "trl", "peft", "lora", "datasets"]})
+ds = ds.map(lambda x: {"len": len(x["text"])}).filter(lambda x: x["len"] > 2)
+split = ds.train_test_split(test_size=0.34, seed=42)
+print(f"datasets {datasets.__version__} | in-memory map/filter/split ok | train {len(split['train'])} | test {len(split['test'])}")
+PY

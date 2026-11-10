@@ -1,0 +1,13 @@
+Package: datasets-termux
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: python-pip, python-pyarrow, python-pandas, python-numpy
+Section: python
+Priority: optional
+Description: HuggingFace Datasets for Termux - training data management
+ Load, stream and cache ML datasets. apt installs pyarrow (prebuilt),
+ pandas and numpy; the install step pip-installs datasets and its
+ small pure-Python deps (xxhash has Android wheels). No Rust builds.
+ Commands: datasets-check, datasets-setup. Set DATASETS_SKIP_SETUP=1
+ during apt install to skip the setup (run datasets-setup later).
