@@ -1,0 +1,16 @@
+#!/data/data/com.termux/files/usr/bin/bash
+PREFIX="${PREFIX:-/data/data/com.termux/files/usr}"
+GLIBCPY="${GLIBC_PYTHON:-$PREFIX/glibc/bin/python3}"
+GRUN="$PREFIX/bin/grun"
+[ -x "$GRUN" ] && [ -x "$GLIBCPY" ] || { echo "[x] glibc python not installed - run: apt install python-glibc" >&2; exit 1; }
+TMPD="$(mktemp -d)"
+cat > "$TMPD/tf_check.py" <<'PY'
+import tensorflow as tf
+print(f"TensorFlow {tf.__version__} | eager {tf.executing_eagerly()}")
+a = tf.constant([[1, 2], [3, 4]])
+print("matmul-sum:", int(tf.reduce_sum(a @ a).numpy()))
+PY
+"$GRUN" "$GLIBCPY" "$TMPD/tf_check.py"
+rc=$?
+rm -rf "$TMPD"
+exit $rc

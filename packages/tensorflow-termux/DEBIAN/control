@@ -1,0 +1,15 @@
+Package: tensorflow-termux
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: glibc-repo, glibc-runner, python-glibc, python-pip-glibc
+Section: python
+Priority: optional
+Description: TensorFlow for Termux (CPU, via termux-glibc)
+ Termux (bionic) has no TensorFlow wheels; the PyPI manylinux aarch64
+ wheels need glibc. This installs termux-glibc, a glibc Python 3.12 and
+ TensorFlow into it (~300 MB wheel plus dependencies, downloaded during
+ install). python3 (bionic) cannot import tensorflow - use tf-python.
+ Commands: tf-python, tensorflow-check, tensorflow-setup.
+ Set TF_SKIP_SETUP=1 during apt install to skip the download (run
+ tensorflow-setup later); TF_VERSION=2.21.0 pins the TensorFlow version.

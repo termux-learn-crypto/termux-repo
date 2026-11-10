@@ -25,6 +25,13 @@ else
   ok "tur-repo already enabled"
 fi
 
+step "Enabling termux-glibc repo (needed for tensorflow-termux)"
+if [ ! -f "$PREFIX/etc/apt/sources.list.d/glibc.list" ]; then
+  apt install -y glibc-repo >/dev/null 2>&1 && ok "termux-glibc repo enabled" || echo -e "${Y}[!] glibc-repo install failed (tensorflow-termux needs it). Later: apt install glibc-repo${N}"
+else
+  ok "termux-glibc repo already enabled"
+fi
+
 step "Adding repository / repo add ho raha hai"
 mkdir -p "$PREFIX/etc/apt/sources.list.d" "$PREFIX/etc/apt/trusted.gpg.d"
 echo "deb [arch=all] ${REPO_URL} ${NAME} main" > "$PREFIX/etc/apt/sources.list.d/${NAME}.list"
@@ -42,3 +49,4 @@ echo -e "${C}  apt install voicestudio${N}"
 echo -e "${C}  apt install pyaudio-termux${N}"
 echo -e "${C}  apt install dvwa-android${N}"
 echo -e "${C}  apt install termux-ml        # numpy, torch, scikit-learn, tokenizers, transformers${N}"
+echo -e "${C}  apt install tensorflow       # CPU TensorFlow via termux-glibc${N}"

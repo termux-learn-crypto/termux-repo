@@ -1,0 +1,3 @@
+#!/data/data/com.termux/files/usr/bin/bash
+PREFIX="${PREFIX:-/data/data/com.termux/files/usr}"
+exec "$PREFIX/bin/grun" "$PREFIX/glibc/bin/python3" "$@"

@@ -1,0 +1,9 @@
+Package: tensorflow
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: tensorflow-termux
+Section: python
+Priority: optional
+Description: Short name for tensorflow-termux
+ Installs tensorflow-termux (apt install tensorflow works).
