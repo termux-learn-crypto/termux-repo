@@ -1,0 +1,14 @@
+Package: trl-termux
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: pytorch-termux, transformers-termux, python-pip, python-pyarrow, python-pandas
+Recommends: peft-termux
+Section: python
+Priority: optional
+Description: TRL (Transformer Reinforcement Learning) for Termux
+ HuggingFace TRL: SFT, DPO, PPO, GRPO and friends for training
+ language models on a phone (CPU). apt installs torch, transformers,
+ pyarrow and pandas; the install step pip-installs datasets and trl.
+ Commands: trl-check, trl-setup. Set TRL_SKIP_SETUP=1 during apt
+ install to skip the setup (run trl-setup later).

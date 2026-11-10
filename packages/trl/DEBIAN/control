@@ -1,0 +1,9 @@
+Package: trl
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: trl-termux
+Section: python
+Priority: optional
+Description: Short name for trl-termux
+ Installs trl-termux (apt install trl works).

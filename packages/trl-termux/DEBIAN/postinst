@@ -1,0 +1,6 @@
+#!/data/data/com.termux/files/usr/bin/sh
+[ "$1" = configure ] || exit 0
+if [ "${TRL_SKIP_SETUP:-0}" != 1 ]; then
+  bash /data/data/com.termux/files/usr/share/trl-termux/setup.sh || echo "[!] trl-termux setup failed. Retry: trl-setup"
+fi
+exit 0
