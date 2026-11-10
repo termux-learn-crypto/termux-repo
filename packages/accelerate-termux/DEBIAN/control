@@ -1,0 +1,15 @@
+Package: accelerate-termux
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: pytorch-termux, python-pip, python-psutil, rust, clang, make, pkg-config
+Section: python
+Priority: optional
+Description: Accelerate for Termux - CPU-only PyTorch training
+ HuggingFace Accelerate for a phone. No CUDA on a phone, so training
+ runs on CPU: the upstream `accelerate` auto-detects Android (PyTorch
+ accelerator: N/A) and uses CPU. apt installs numpy, torch and the
+ Rust toolchain (needed only if safetensors must be compiled); the
+ install step pip-installs accelerate. Commands: accelerate-check,
+ accelerate-setup, upstream `accelerate`. Set ACCELERATE_SKIP_SETUP=1
+ during apt install to skip the setup (run accelerate-setup later).

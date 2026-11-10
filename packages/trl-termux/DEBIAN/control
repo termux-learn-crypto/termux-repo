@@ -1,8 +1,8 @@
 Package: trl-termux
-Version: 1.1.0
+Version: 1.2.0
 Architecture: all
 Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
-Depends: pytorch-termux, transformers-termux, python-pip, datasets-termux, python-pyarrow, python-pandas
+Depends: pytorch-termux, transformers-termux, python-pip, datasets-termux, accelerate-termux, python-pyarrow, python-pandas
 Recommends: peft-termux
 Section: python
 Priority: optional

@@ -1,0 +1,9 @@
+Package: accelerate
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: accelerate-termux
+Section: python
+Priority: optional
+Description: Short name for accelerate-termux
+ Installs accelerate-termux (apt install accelerate works).
