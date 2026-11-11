@@ -18,9 +18,11 @@ if [ -n "$BNB_VERSION" ]; then
 else
   SPEC="bitsandbytes"
 fi
-echo "[*] Installing torch (CPU, ~480 MB) + $SPEC into glibc python ..."
-echo "[*] Slow connection pe ye 30-60 min le sakta hai. Charge pe rakho."
-"$GRUN" "$GLIBCPY" -m pip install --no-cache-dir --prefer-binary torch || { unlock; echo "[x] torch install failed"; exit 1; }
+echo "[*] Installing torch (CPU-only, ~170 MB) + $SPEC into glibc python ..."
+echo "[*] Slow connection pe ye kuch samay le sakta hai. Charge pe rakho."
+# The PyPI aarch64 wheel pulls ~1 GB of nvidia CUDA deps; the download.pytorch.org +cpu wheel is CPU-only (~170 MB)
+"$GRUN" "$GLIBCPY" -m pip install --no-cache-dir --prefer-binary --index-url https://download.pytorch.org/whl/cpu torch \
+  || "$GRUN" "$GLIBCPY" -m pip install --no-cache-dir --prefer-binary torch || { unlock; echo "[x] torch install failed"; exit 1; }
 "$GRUN" "$GLIBCPY" -m pip install --no-cache-dir --prefer-binary "$SPEC" || { unlock; echo "[x] bitsandbytes install failed"; exit 1; }
 unlock
 echo "[*] Verifying..."

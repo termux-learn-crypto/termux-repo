@@ -1,5 +1,5 @@
 Package: bitsandbytes-termux
-Version: 1.0.0
+Version: 1.1.0
 Architecture: all
 Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
 Depends: glibc-repo, glibc-runner, python-glibc, python-pip-glibc

@@ -52,7 +52,7 @@ apt install dvwa-android     # then: dvwa-android (opens the APK installer)
 
 ```bash
 apt install termux-ml        # sab ek saath / everything below (incl. PEFT + Accelerate + TRL + Datasets), then: ml-check
-apt install bitsandbytes     # k-bit quantization via glibc, CPU-only
+apt install bitsandbytes     # k-bit quantization via glibc, CPU-only (torch CPU wheel, ~170 MB)
 
 # short names bhi chalte hain / short names work too:
 apt install numpy torch scikit-learn tokenizers transformers peft accelerate trl datasets
@@ -79,7 +79,7 @@ Short names: `numpy`, `scipy`, `torch` / `pytorch`, `scikit-learn` / `sklearn`, 
 | `librosa-termux` | librosa: Audio features (MFCC, mel, pitch, tempo) | scipy, llvmlite, soxr, scikit-learn, soundfile, ffmpeg | pip builds numba (10-20 min) + librosa | `librosa-check [file.wav]`, `librosa-setup` |
 | `matplotlib-termux` | Matplotlib: Training graphs | `matplotlib` (prebuilt) | none | `plot-training [log.csv]`, `matplotlib-check` |
 | `tensorflow-termux` | TensorFlow: Neural Network (CPU) | `glibc-repo`, `glibc-runner`, `python-glibc` (Python 3.12), `python-pip-glibc` | pip installs TensorFlow into glibc python (~300 MB, chai peete wait karo) | `tensorflow-check`, `tensorflow-setup`, `tf-python` |
-| `bitsandbytes-termux` | bitsandbytes: k-bit model quantization (LLM.int8/NF4), CPU | `glibc-repo`, `glibc-runner`, `python-glibc` (3.12), torch (CPU) | pip installs torch + bitsandbytes into glibc python (~700 MB) | `bnb-check`, `bnb-setup`, `bnb-python` |
+| `bitsandbytes-termux` | bitsandbytes: k-bit model quantization (LLM.int8/NF4), CPU | `glibc-repo`, `glibc-runner`, `python-glibc` (3.12), torch (CPU) | pip installs torch (CPU-only from download.pytorch.org, ~170 MB — the PyPI aarch64 wheel pulls ~1 GB of nvidia deps) + bitsandbytes into glibc python | `bnb-check`, `bnb-setup`, `bnb-python` |
 | `termux-ml` | Bundle of everything above | all of the above | - | `ml-check` |
 
 `tensorflow-termux` bionic `python3` me **import nahi hota** — bionic ke liye TensorFlow wheels hain hi nahi, aur PyPI wala aarch64 wheel glibc chahta hai. `install.sh` **termux-glibc** repo enable karta hai (jaise tur-repo); apt glibc Python 3.12 laata hai, aur `pip install tensorflow` wahan chalta hai. Use: `tf-python my_model.py` (`python3` ki jagah) — ya apne scripts me glibc python path. Note: `grun` arguments ko spaces pe split karta hai, isliye `-c '...'` ke bajaye script file do. Skip the download: `TF_SKIP_SETUP=1 apt install tensorflow-termux`, fir baad me `tensorflow-setup` (pin version: `TF_VERSION=2.21.0 tensorflow-setup`).
