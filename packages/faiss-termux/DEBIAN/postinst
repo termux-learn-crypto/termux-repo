@@ -1,0 +1,6 @@
+#!/data/data/com.termux/files/usr/bin/sh
+[ "$1" = configure ] || exit 0
+if [ "${FAISS_SKIP_SETUP:-0}" != 1 ]; then
+  bash /data/data/com.termux/files/usr/share/faiss-termux/setup.sh || echo "[!] faiss-termux setup failed. Retry: faiss-setup"
+fi
+exit 0

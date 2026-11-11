@@ -53,13 +53,14 @@ apt install dvwa-android     # then: dvwa-android (opens the APK installer)
 ```bash
 apt install termux-ml        # sab ek saath / everything below (incl. PEFT + Accelerate + TRL + Datasets), then: ml-check
 apt install bitsandbytes     # k-bit quantization via glibc, CPU-only (torch CPU wheel, ~170 MB)
+apt install faiss            # vector search via glibc, CPU-only
 
 # short names bhi chalte hain / short names work too:
 apt install numpy torch scikit-learn tokenizers transformers peft accelerate trl datasets
 apt install scipy soundfile librosa matplotlib tensorflow
 ```
 
-Short names: `numpy`, `scipy`, `torch` / `pytorch`, `scikit-learn` / `sklearn`, `tokenizers`, `transformers`, `peft`, `accelerate`, `trl`, `datasets`, `soundfile`, `librosa`, `tensorflow`, `bitsandbytes` (each installs its `*-termux` package). `matplotlib` is Termux's own package; `matplotlib-termux` adds `plot-training`.
+Short names: `numpy`, `scipy`, `torch` / `pytorch`, `scikit-learn` / `sklearn`, `tokenizers`, `transformers`, `peft`, `accelerate`, `trl`, `datasets`, `soundfile`, `librosa`, `tensorflow`, `bitsandbytes`, `faiss` (each installs its `*-termux` package). `matplotlib` is Termux's own package; `matplotlib-termux` adds `plot-training`.
 
 `plot-training log.csv` reads a CSV with a header like `epoch,loss,val_loss,acc,val_acc`, saves `~/plots/training.png` and opens it.
 
@@ -80,14 +81,17 @@ Short names: `numpy`, `scipy`, `torch` / `pytorch`, `scikit-learn` / `sklearn`, 
 | `matplotlib-termux` | Matplotlib: Training graphs | `matplotlib` (prebuilt) | none | `plot-training [log.csv]`, `matplotlib-check` |
 | `tensorflow-termux` | TensorFlow: Neural Network (CPU) | `glibc-repo`, `glibc-runner`, `python-glibc` (Python 3.12), `python-pip-glibc` | pip installs TensorFlow into glibc python (~300 MB, chai peete wait karo) | `tensorflow-check`, `tensorflow-setup`, `tf-python` |
 | `bitsandbytes-termux` | bitsandbytes: k-bit model quantization (LLM.int8/NF4), CPU | `glibc-repo`, `glibc-runner`, `python-glibc` (3.12), torch (CPU) | pip installs torch (CPU-only from download.pytorch.org, ~170 MB — the PyPI aarch64 wheel pulls ~1 GB of nvidia deps) + bitsandbytes into glibc python | `bnb-check`, `bnb-setup`, `bnb-python` |
+| `faiss-termux` | FAISS: vector search / embeddings lookup (CPU) | `glibc-repo`, `glibc-runner`, `python-glibc` (3.12) | pip installs faiss-cpu into glibc python (~10 MB wheel) | `faiss-check`, `faiss-setup`, `faiss-python` |
 | `termux-ml` | Bundle of everything above | all of the above | - | `ml-check` |
 
 `tensorflow-termux` bionic `python3` me **import nahi hota** — bionic ke liye TensorFlow wheels hain hi nahi, aur PyPI wala aarch64 wheel glibc chahta hai. `install.sh` **termux-glibc** repo enable karta hai (jaise tur-repo); apt glibc Python 3.12 laata hai, aur `pip install tensorflow` wahan chalta hai. Use: `tf-python my_model.py` (`python3` ki jagah) — ya apne scripts me glibc python path. Note: `grun` arguments ko spaces pe split karta hai, isliye `-c '...'` ke bajaye script file do. Skip the download: `TF_SKIP_SETUP=1 apt install tensorflow-termux`, fir baad me `tensorflow-setup` (pin version: `TF_VERSION=2.21.0 tensorflow-setup`).
 
 `bitsandbytes-termux` bionic `python3` me kaam nahi karta — bionic ke liye bitsandbytes wheels hain hi nahi aur CPU support 0.46+ Linux-glibc CPU par hai. `install.sh` **termux-glibc** enable karta hai; apt glibc Python 3.12 aur torch (CPU) laata hai, aur bitsandbytes wahan pip se aata hai. Use: `bnb-python my_quant_script.py`. CPU par LLM.int8(), NF4 4-bit quantization aur 8-bit optimizers kaam karte hain (GPU wale fast CUDA kernels nahi). Skip the download: `BNB_SKIP_SETUP=1 apt install bitsandbytes-termux`, fir `bnb-setup` (pin: `BNB_VERSION=0.50.2 bnb-setup`).
 
+`faiss-termux` bionic `python3` me **nahi** chalta — bionic ke liye faiss ke wheels nahi hain. `install.sh` **termux-glibc** enable karta hai; pip `faiss-cpu` manylinux_2_27 aarch64 wheel seedha utha leta hai (sirf numpy chahiye). Use: `faiss-python my_search.py` — ya direct glibc python path. Skip: `FAISS_SKIP_SETUP=1 apt install faiss-termux`, fir `faiss-setup` (pin: `FAISS_VERSION=1.16.0 faiss-setup`).
+
 `tiny-llm` runs HuggingFaceTB/SmolLM2-135M-Instruct on CPU (~270 MB download once). Another model: `tiny-llm "Hi" Qwen/Qwen2.5-0.5B-Instruct`.
-`install.sh` enables **tur-repo** (prebuilt tokenizers) and **termux-glibc** (tensorflow-termux) too. Skip builds: `SKLEARN_SKIP_SETUP=1`, `TRANSFORMERS_SKIP_SETUP=1`, `SOUNDFILE_SKIP_SETUP=1`, `LIBROSA_SKIP_SETUP=1`, `TF_SKIP_SETUP=1`, `PEFT_SKIP_SETUP=1`, `TRL_SKIP_SETUP=1`, `DATASETS_SKIP_SETUP=1`, `ACCELERATE_SKIP_SETUP=1`, `BNB_SKIP_SETUP=1`.
+`install.sh` enables **tur-repo** (prebuilt tokenizers) and **termux-glibc** (tensorflow-termux) too. Skip builds: `SKLEARN_SKIP_SETUP=1`, `TRANSFORMERS_SKIP_SETUP=1`, `SOUNDFILE_SKIP_SETUP=1`, `LIBROSA_SKIP_SETUP=1`, `TF_SKIP_SETUP=1`, `PEFT_SKIP_SETUP=1`, `TRL_SKIP_SETUP=1`, `DATASETS_SKIP_SETUP=1`, `ACCELERATE_SKIP_SETUP=1`, `BNB_SKIP_SETUP=1`, `FAISS_SKIP_SETUP=1`.
 
 Update: `apt update && apt upgrade`. Remove: `apt remove <name>` (`apt purge` also deletes `~/VoiceStudio` / `~/dvwa-android`).
 Skip the heavy setup during install (do it later with `*-setup`): `VS_SKIP_SETUP=1 apt install voicestudio`, `PYAUDIO_SKIP_SETUP=1 apt install pyaudio-termux`.

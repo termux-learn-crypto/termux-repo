@@ -1,0 +1,8 @@
+#!/data/data/com.termux/files/usr/bin/sh
+[ "$1" = remove ] || exit 0
+PREFIX="${PREFIX:-/data/data/com.termux/files/usr}"
+GLIBCPY="${GLIBC_PYTHON:-$PREFIX/glibc/bin/python3}"
+if command -v "$PREFIX/bin/grun" >/dev/null 2>&1 && [ -x "$GLIBCPY" ]; then
+  "$PREFIX/bin/grun" "$GLIBCPY" -m pip uninstall -y faiss-cpu >/dev/null 2>&1
+fi
+exit 0

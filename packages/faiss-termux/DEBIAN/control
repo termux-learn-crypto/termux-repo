@@ -1,0 +1,15 @@
+Package: faiss-termux
+Version: 1.0.0
+Architecture: all
+Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
+Depends: glibc-repo, glibc-runner, python-glibc, python-pip-glibc
+Section: python
+Priority: optional
+Description: FAISS for Termux - vector database / similarity search
+ Facebook AI Similarity Search: nearest-neighbor search over embeddings,
+ fully on CPU. Termux (bionic) has no faiss wheels; the PyPI
+ manylinux aarch64 wheels need glibc. This installs the glibc
+ toolchain, a glibc Python 3.12 and faiss-cpu into it; your python3
+ (bionic) is untouched. Commands: faiss-python, faiss-check,
+ faiss-setup. Set FAISS_SKIP_SETUP=1 during apt install to skip the
+ setup (run faiss-setup later); FAISS_VERSION=1.16.0 pins faiss.

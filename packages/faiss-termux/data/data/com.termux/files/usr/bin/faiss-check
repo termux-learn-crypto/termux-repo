@@ -1,0 +1,26 @@
+#!/data/data/com.termux/files/usr/bin/bash
+PREFIX="${PREFIX:-/data/data/com.termux/files/usr}"
+GLIBCPY="${GLIBC_PYTHON:-$PREFIX/glibc/bin/python3}"
+GRUN="$PREFIX/bin/grun"
+[ -x "$GRUN" ] && [ -x "$GLIBCPY" ] || { echo "[x] glibc python not installed - run: apt install python-glibc" >&2; exit 1; }
+TMPD="$(mktemp -d)"
+cat > "$TMPD/faiss_check.py" <<'PY'
+import time
+import numpy as np
+import faiss
+
+n, d = 256, 32
+rng = np.random.default_rng(42)
+vecs = rng.random((n, d)).astype(np.float32)
+index = faiss.IndexFlatL2(d)
+index.add(vecs)
+q = vecs[:3].copy()
+t0 = time.time()
+D, I = index.search(q, 5)
+ms = (time.time() - t0) * 1000
+print(f"faiss {faiss.__version__} | index {index.ntotal} vectors d={d} | 5-NN in {ms:.1f} ms | top ids {I[0].tolist()}")
+PY
+"$GRUN" "$GLIBCPY" "$TMPD/faiss_check.py"
+rc=$?
+rm -rf "$TMPD"
+exit $rc
