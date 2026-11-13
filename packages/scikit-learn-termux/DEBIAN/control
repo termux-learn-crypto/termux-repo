@@ -1,5 +1,5 @@
 Package: scikit-learn-termux
-Version: 1.0.0
+Version: 1.0.1
 Architecture: all
 Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
 Depends: python, python-pip, python-numpy, python-scipy, clang, make, ninja, pkg-config, libopenblas, binutils
