@@ -2,9 +2,9 @@
 import sys
 from compiler import compile_code
 
-VERSION = "3.1.0"
+VERSION = "3.2.0"
 
-USAGE = """HinglishPy 3.1 - Python jaisa, par Hinglish me
+USAGE = """HinglishPy 3.2 - Python jaisa, par Hinglish me
 
 Usage:
   hinglishpy                  Interactive REPL (hinglishpy >>> )

@@ -36,6 +36,8 @@ class Codegen:
         return "\n".join(self.lines) + ("\n" if self.lines else "")
 
     def prec(self, node):
+        if isinstance(node, N.NamedExpr):
+            return 1
         if isinstance(node, N.BoolOp):
             return 3 if node.op == "and" else 2
         if isinstance(node, N.ConditionalExp):
@@ -117,6 +119,8 @@ class Codegen:
             if node.value is None:
                 return "yield"
             return f"yield {self.expr(node.value)}"
+        if isinstance(node, N.NamedExpr):
+            return f"{node.target.id} := {self.expr(node.value)}"
         if isinstance(node, N.BoolOp):
             is_and = node.op == "and"
             op = " and " if is_and else " or "
@@ -184,7 +188,12 @@ class Codegen:
         return self.expr(node)
 
     def stmt_Assign(self, node):
-        targets = [self._target(t) for t in node.targets]
+        targets = []
+        for i, t in enumerate(node.targets):
+            if isinstance(t, N.Tuple) and len(node.targets) == 1:
+                targets.append(", ".join(self.expr(e) for e in t.elts))
+            else:
+                targets.append(self._target(t))
         self.emit(" = ".join(targets) + f" = {self.expr(node.value)}")
 
     def stmt_AugAssign(self, node):
@@ -262,6 +271,9 @@ class Codegen:
         for p in params:
             if p.kind == "staronly":
                 parts.append("*")
+                continue
+            if p.kind == "slash":
+                parts.append("/")
                 continue
             text = ("*" if p.kind == "vararg" else "**" if p.kind == "kwarg" else "") + pname(p.name)
             if p.annotation is not None:
@@ -372,6 +384,59 @@ class Codegen:
         if node.finalbody:
             self.emit("finally:")
             self.body(node.finalbody, self.indent + 1)
+
+
+    # ---------- match / case ----------
+
+    def stmt_Match(self, node):
+        level = self.indent
+        self.emit(f"match {self.expr(node.subject)}:")
+        for case in node.cases:
+            guard = f" if {self.expr(case.guard)}" if case.guard is not None else ""
+            self.indent = level + 1
+            self.emit(f"case {self.pattern(case.pattern, top=True)}{guard}:")
+            self.body(case.body, level + 2)
+            self.indent = level + 1
+
+    def pattern(self, node, top=False, parens=False):
+        def bind(name):
+            return NAME_MAP.get(name, name)
+
+        if isinstance(node, N.LiteralPattern):
+            return str(node.value)
+        if isinstance(node, N.CapturePattern):
+            return bind(node.name)
+        if isinstance(node, N.WildcardPattern):
+            return "_"
+        if isinstance(node, N.ValuePattern):
+            return node.dotted
+        if isinstance(node, N.SequencePattern):
+            close = "[" if node.bracket == "[" else "("
+            parts = [self.pattern(e) for e in node.elts]
+            return f"{close}{', '.join(parts)}" + ("]" if node.bracket == "[" else ")")
+        if isinstance(node, N.StarPattern):
+            return f"*{bind(node.name)}"
+        if isinstance(node, N.MappingPattern):
+            parts = []
+            for pair in node.pairs:
+                parts.append(f"{self.pattern(pair.key)}: {self.pattern(pair.pattern)}")
+            if node.rest is not None:
+                parts.append(f"**{bind(node.rest)}")
+            return "{" + ", ".join(parts) + "}"
+        if isinstance(node, N.ClassPattern):
+            args = [self.pattern(a) for a in node.args]
+            for kw in node.kwargs:
+                args.append(f"{kw.name}={self.pattern(kw.pattern)}")
+            return f"{node.dotted}({', '.join(args)})"
+        if isinstance(node, N.AsPattern):
+            left = self.pattern(node.pattern)
+            return f"{left} as {bind(node.name)}"
+        if isinstance(node, N.OrPattern):
+            joined = " | ".join(self.pattern(v) for v in node.values)
+            if top:
+                return joined
+            return f"({joined})"
+        raise TypeError(f"Unknown pattern node: {node!r}")
 
 
 def generate(module):

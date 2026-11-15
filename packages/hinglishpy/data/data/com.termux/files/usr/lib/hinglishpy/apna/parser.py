@@ -105,6 +105,10 @@ class Parser:
             return self.parse_while()
         if tok.type in ("FOR", "WITH"):
             return self.parse_for_or_with(is_async=False)
+        if tok.type == "MATCH":
+            return self.parse_match()
+        if tok.type == "CASE":
+            raise HinglishError(tok.line, "case bina match ke nahi aata", "case without match")
         if tok.type == "TRY":
             return self.parse_try()
         if tok.type == "RETURN":
@@ -171,27 +175,67 @@ class Parser:
 
         return self.parse_expr_or_assign()
 
+    _AUGOPS = ("+=", "-=", "*=", "/=", "//=", "%=", "**=", "@=", "&=", "|=", "^=", ">>=", "<<=")
+
+    def _parse_assign_units(self):
+        elts = [self._parse_star_one()]
+        while self.accept(","):
+            if self.current().type in ("=", "NEWLINE"):
+                break
+            elts.append(self._parse_star_one())
+        return elts
+
+    def _make_target(self, elts):
+        if len(elts) == 1:
+            return elts[0]
+        return N.Tuple(elts=elts)
+
     def parse_expr_or_assign(self):
         first = self._parse_star_one()
-        aug = self.current()
-        if aug.type in ("+=", "-=", "*=", "/=", "//=", "%=", "**=", "@=", "&=", "|=", "^=", ">>=", "<<="):
+        tok = self.current()
+        if tok.type in self._AUGOPS:
             self.advance()
+            if isinstance(first, (N.Tuple, N.List, N.Starred)):
+                raise HinglishError(tok.line,
+                                    "augmented assignment ka target simple hona chahiye",
+                                    "Augmented assignment needs a simple target")
             value = self.parse_expression_list()
             self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
             self._check_assignable(first)
-            return N.AugAssign(target=first, op=aug.type, value=value)
-        if aug.type == "=":
-            targets = [first]
+            return N.AugAssign(target=first, op=tok.type, value=value)
+        if tok.type in (",", "="):
+            elts = [first]
+            trailing_comma = False
             while self.accept(","):
-                targets.append(self._parse_star_one())
-            self.expect("=", "assignment me '=' chahiye", "Expected '=' in assignment")
-            value = self.parse_expression_list()
+                trailing_comma = True
+                if self.current().type in ("=", "NEWLINE"):
+                    break
+                elts.append(self._parse_star_one())
+                trailing_comma = False
+            if self.current().type == "=":
+                segments = [elts]
+                while self.accept("="):
+                    save = self.pos
+                    units = None if self.current().type == "LAMBDA" else self._parse_assign_units()
+                    if units is not None and self.current().type == "=":
+                        segments.append(units)
+                    else:
+                        self.pos = save
+                        value = self.parse_expression_list()
+                        self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
+                        targets = [self._make_target(seg) for seg in segments]
+                        for st in targets:
+                            self._check_assignable(st)
+                        return N.Assign(targets=targets, value=value)
+                raise HinglishError(self.current().line,
+                                    "assignment adhoora hai",
+                                    "Incomplete assignment")
             self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
-            for t in targets:
-                self._check_assignable(t)
-            if len(targets) > 1:
-                targets = [N.Tuple(elts=targets)]
-            return N.Assign(targets=targets, value=value)
+            if len(elts) == 1 and trailing_comma:
+                return N.ExprStmt(value=N.Tuple(elts=elts))
+            if len(elts) == 1:
+                return N.ExprStmt(value=elts[0])
+            return N.ExprStmt(value=N.Tuple(elts=elts))
         if self.accept(":"):
             annotation = self.parse_expression()
             value = None
@@ -199,20 +243,6 @@ class Parser:
                 value = self.parse_expression()
             self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
             return N.AnnAssign(target=first, annotation=annotation, value=value)
-        if self.accept(","):
-            targets = [first]
-            targets.append(self._parse_star_one())
-            if self.current().type == "=":
-                self.advance()
-                value = self.parse_expression_list()
-                self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
-                for t in targets:
-                    self._check_assignable(t)
-                targets = [N.Tuple(elts=targets)]
-                return N.Assign(targets=targets, value=value)
-            elts = [first] + targets[1:]
-            self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
-            return N.ExprStmt(value=N.Tuple(elts=elts))
         self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
         return N.ExprStmt(value=first)
 
@@ -405,6 +435,11 @@ class Parser:
                 if not self.accept(","):
                     break
                 continue
+            if self.accept("/"):
+                params.append(N.Param(name="", default=None, annotation=None, kind="slash"))
+                if not self.accept(","):
+                    break
+                continue
             name_tok = self.expect("NAME", "Parameter ka naam chahiye", "Expected parameter name")
             annotation = None
             if self.accept(":"):
@@ -474,6 +509,11 @@ class Parser:
     def parse_expression(self):
         if self.current().type == "LAMBDA":
             return self.parse_lambda()
+        if self.current().type == "NAME" and self.peek().type == ":=":
+            name = self.advance().value
+            self.advance()
+            value = self.parse_expression()
+            return N.NamedExpr(target=N.Name(id=name), value=value)
         return self.parse_if_exp()
 
     def parse_if_exp(self):
@@ -858,3 +898,168 @@ class Parser:
             return lower
         self.expect("]", "']' chahiye", "Expected ']'")
         return N.Slice(lower=lower, upper=upper, step=step)
+
+    # ---------- match / case ----------
+
+    def parse_match(self):
+        self.advance()
+        subject = self.parse_expression()
+        self.expect(":", "match subject ke baad ':' chahiye", "Expected ':' after match subject")
+        self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
+        self.skip_newlines()
+        self.expect("INDENT", "match ke andar 'case' wali lines chahiye", "Expected indented case blocks")
+        self.skip_newlines()
+        cases = []
+        while self.current().type == "CASE":
+            cases.append(self.parse_case())
+            self.skip_newlines()
+        if not cases:
+            raise HinglishError(self.current().line,
+                                "match me kam se kam ek 'case' chahiye",
+                                "match needs at least one 'case'")
+        self.expect("DEDENT", "Indent sahi band nahi hui", "Expected dedent")
+        return N.Match(subject=subject, cases=cases)
+
+    def parse_case(self):
+        self.advance()
+        pattern = self.parse_pattern()
+        guard = None
+        if self.accept("IF"):
+            guard = self.parse_expression()
+        body = self.parse_block()
+        return N.Case(pattern=pattern, guard=guard, body=body)
+
+    def parse_pattern(self):
+        node = self.parse_as_pattern()
+        values = [node]
+        while self.accept("|"):
+            values.append(self.parse_as_pattern())
+        if len(values) == 1:
+            return values[0]
+        return N.OrPattern(values=values)
+
+    def parse_as_pattern(self):
+        node = self.parse_primary_pattern()
+        if self.accept("AS"):
+            name = self.expect("NAME", "'jaise' ke baad naam chahiye", "Expected name after jaise").value
+            return N.AsPattern(pattern=node, name=name)
+        return node
+
+    def parse_primary_pattern(self):
+        tok = self.current()
+
+        if tok.type == "-":
+            self.advance()
+            num = self.expect("NUMBER", "'-' ke baad number chahiye", "Expected number after '-'").value
+            return N.LiteralPattern(value="-" + num)
+        if tok.type == "NUMBER":
+            self.advance()
+            return N.LiteralPattern(value=tok.value)
+        if tok.type == "STRING":
+            self.advance()
+            return N.LiteralPattern(value=tok.value)
+        if tok.type in ("TRUE", "FALSE", "NONE"):
+            self.advance()
+            return N.LiteralPattern(value={"TRUE": "True", "FALSE": "False", "NONE": "None"}[tok.type])
+
+        if tok.type == "(":
+            self.advance()
+            elts = [self.parse_pattern()]
+            while self.accept(","):
+                if self.current().type == ")":
+                    break
+                elts.append(self.parse_pattern())
+            self.expect(")", "')' chahiye", "Expected ')'")
+            if len(elts) == 1:
+                return elts[0]
+            return N.SequencePattern(elts=elts, bracket="(")
+
+        if tok.type in ("[",):
+            self.advance()
+            elts = self._parse_sequence_elts("]")
+            self.expect("]", "']' chahiye", "Expected ']'")
+            return N.SequencePattern(elts=elts, bracket="[")
+
+        if tok.type == "{":
+            self.advance()
+            pairs = []
+            rest = None
+            if self.current().type != "}":
+                while True:
+                    if self.accept("**"):
+                        rest = self.expect("NAME", "'**' ke baad naam chahiye", "Expected name after '**'").value
+                        break
+                    key_tok = self.current()
+                    if key_tok.type == "STRING":
+                        key = N.LiteralPattern(value=self.advance().value)
+                    elif key_tok.type == "NUMBER":
+                        key = N.LiteralPattern(value=self.advance().value)
+                    elif key_tok.type in ("TRUE", "FALSE", "NONE"):
+                        key = N.LiteralPattern(value={"TRUE": "True", "FALSE": "False", "NONE": "None"}[key_tok.type])
+                        self.advance()
+                    else:
+                        raise HinglishError(key_tok.line,
+                                            "dict ka key literal hona chahiye",
+                                            "Dict pattern keys must be literals")
+                    self.expect(":", "':' chahiye", "Expected ':' in dict pattern")
+                    value = self.parse_pattern()
+                    pairs.append(N.MapPair(key=key, pattern=value))
+                    if not self.accept(","):
+                        break
+            self.expect("}", "'}' chahiye", "Expected '}'")
+            return N.MappingPattern(pairs=pairs, rest=rest)
+
+        if tok.type == "NAME":
+            name = tok.value
+            if name == "_":
+                self.advance()
+                return N.WildcardPattern()
+            dotted = [self.advance().value]
+            while self.accept("."):
+                dotted.append(self.expect("NAME", "'.' ke baad naam chahiye", "Expected name after '.'").value)
+            dotted = ".".join(dotted)
+            if self.current().type == "(":
+                self.advance()
+                args = []
+                kwargs = []
+                if not self.accept(")"):
+                    while True:
+                        if self.current().type == "NAME" and self.peek().type == "=":
+                            kw_name = self.advance().value
+                            self.advance()
+                            kwargs.append(N.ClassKw(name=kw_name, pattern=self.parse_pattern()))
+                        else:
+                            args.append(self.parse_pattern())
+                        if not self.accept(","):
+                            break
+                    self.expect(")", "')' chahiye", "Expected ')'")
+                return N.ClassPattern(dotted=dotted, args=args, kwargs=kwargs)
+            if "." in dotted:
+                return N.ValuePattern(dotted=dotted)
+            return N.CapturePattern(name=dotted)
+
+        got = tok.type if tok.type not in ("NAME", "STRING", "NUMBER") else repr(tok.value)
+        raise HinglishError(tok.line,
+                            f"Yeh pattern nahi ban sakta (mile: {got})",
+                            f"Not a valid pattern (got: {got})")
+
+    def _parse_sequence_elts(self, close):
+        elts = []
+        while True:
+            if self.current().type == close:
+                break
+            if self.accept(","):
+                continue
+            if self.accept("*"):
+                tok = self.current()
+                if tok.type == "NAME":
+                    elts.append(N.StarPattern(name=self.advance().value))
+                else:
+                    raise HinglishError(tok.line,
+                                        "'*' ke baad naam ya '_' chahiye",
+                                        "Expected name or '_' after '*'")
+                continue
+            elts.append(self.parse_pattern())
+            if not self.accept(","):
+                break
+        return elts
