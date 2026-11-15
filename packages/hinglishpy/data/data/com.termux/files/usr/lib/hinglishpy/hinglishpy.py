@@ -1,14 +1,32 @@
-# HinglishPy REPL
+# HinglishPy CLI - hinglishpy command
 import sys
 from compiler import compile_code
 
-def main():
-    if len(sys.argv) > 1:
-        sys.argv = ["compiler.py", sys.argv[1], "run"]
-        from compiler import main as comp_main
-        comp_main()
-        return
-    print("HinglishPy 3.0 - Apna Compiler, Poora Hinglish Me")
+VERSION = "3.1.0"
+
+USAGE = """HinglishPy 3.1 - Python jaisa, par Hinglish me
+
+Usage:
+  hinglishpy                  Interactive REPL (hinglishpy >>> )
+  hinglishpy script.hl        .hl file chalana
+  hinglishpy script.hl a b    .hl file chalana, args sys.argv me milenge
+  hinglishpy -c "code"        Seedha code chalana
+  hinglishpy --help           Ye help
+  hinglishpy --version        Version batana
+
+Examples:
+  hinglishpy hello.hl
+  hinglishpy -c 'bolo "Namaste duniya!"'
+  hinglishpy -c 'bolo ginti(5)'
+"""
+
+def run_source(source, argv):
+    python_code = compile_code(source)
+    sys.argv = argv
+    exec(python_code, {"__name__": "__main__"})
+
+def repl():
+    print(f"HinglishPy {VERSION} - Apna Compiler, Poora Hinglish Me")
     print("Bahar nikalne ke liye: bahar")
     print("")
     my_vars = {}
@@ -29,7 +47,7 @@ def main():
             while True:
                 try:
                     nxt = input("... ")
-                except:
+                except Exception:
                     break
                 if nxt.strip() == "":
                     break
@@ -41,6 +59,36 @@ def main():
             continue
         except Exception as e:
             print(f"Galti / Error: {e}")
+
+def main():
+    args = sys.argv[1:]
+    if not args:
+        repl()
+        return
+    if args[0] in ("-h", "--help"):
+        print(USAGE)
+        return
+    if args[0] == "--version":
+        print(f"HinglishPy {VERSION}")
+        return
+    if args[0] == "-c":
+        if len(args) < 2:
+            print("hinglishpy: -c requires an argument")
+            sys.exit(2)
+        run_source(args[1], ["-c"] + args[2:])
+        return
+    script = args[0]
+    if not script.endswith(".hl"):
+        print(f"hinglishpy: {script} — file .hl honi chahiye")
+        print("hinglishpy --help")
+        sys.exit(2)
+    try:
+        with open(script, "r", encoding="utf-8") as f:
+            source = f.read()
+    except FileNotFoundError:
+        print(f"hinglishpy: File nahi mili - {script}")
+        sys.exit(2)
+    run_source(source, [script] + args[1:])
 
 if __name__ == "__main__":
     main()
