@@ -47,6 +47,7 @@ apt install dvwa-android     # then: dvwa-android (opens the APK installer)
 | `voicestudio` | 1.1.0 | `voicestudio`, `voicestudio-setup` | apt installs python, torch, torchaudio, ffmpeg, rust etc.; install step clones [VoiceStudio](https://github.com/termux-learn-crypto/VoiceStudio) (termux branch) into `~/VoiceStudio` with venv + web UI. First install 15-30 min (pydantic-core Rust compile) - phone charge pe rakho. |
 | `pyaudio-termux` | 1.1.0 | `start-audio`, `pyaudio-test`, `pyaudio-setup` | apt installs portaudio, pulseaudio, clang, python; install step builds PyAudio ([pyaudio-termux](https://github.com/termux-learn-crypto/pyaudio-termux)). |
 | `dvwa-android` | 2.1.1-1 | `dvwa-android` | Install step downloads the [DVWA Android](https://github.com/termux-learn-crypto/dvwa-android) v2.1.1 APK to `~/dvwa-android`; `dvwa-android` opens the Android installer. |
+| `hinglishpy` | 3.4.0 | `hinglishpy` | HinglishPy - Python jaisa, par Hinglish keywords (`agar`, `warna`, `jabtak`, `har` …); apna compiler (desugar → Python). `hinglishpy script.hl` chalao ya interactive REPL. |
 
 ### Machine learning (ML) packages
 
