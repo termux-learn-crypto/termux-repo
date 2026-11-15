@@ -80,3 +80,5 @@ ClassPattern = _mk("ClassPattern", ["dotted", "args", "kwargs"])
 ClassKw = _mk("ClassKw", ["name", "pattern"])
 AsPattern = _mk("AsPattern", ["pattern", "name"])
 OrPattern = _mk("OrPattern", ["values"])
+
+TypeAlias = _mk("TypeAlias", ["name", "value"])

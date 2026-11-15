@@ -17,6 +17,7 @@ KEYWORDS = {
     "sach": "ASSERT", "mitao": "DEL", "batao": "YIELD",
     "baishvik": "GLOBAL", "asthaniye": "NONLOCAL",
     "intezar": "AWAIT", "asink": "ASYNC", "bolo": "PRINT",
+    "jab": "JAB",
 }
 
 _NUMBER = (

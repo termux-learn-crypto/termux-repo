@@ -181,6 +181,9 @@ class Codegen:
 
     # ---------- statements ----------
 
+    def stmt_TypeAlias(self, node):
+        self.emit(f"type {node.name} = {self.expr(node.value)}")
+
     def stmt_Module(self, node):
         self.body(node.body, 0)
 

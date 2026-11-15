@@ -82,6 +82,8 @@ class Parser:
                 return stmt
             raise HinglishError(tok.line, "Decorator sirf kaam/varg ke upar", "Decorators only on functions/classes")
 
+        if tok.type == "JAB":
+            return self.parse_jab()
         if tok.type == "ASYNC":
             self.advance()
             nxt = self.current()
@@ -105,6 +107,8 @@ class Parser:
             return self.parse_while()
         if tok.type in ("FOR", "WITH"):
             return self.parse_for_or_with(is_async=False)
+        if tok.type == "NAME" and tok.value == "prakar" and self.peek().type == "NAME" and self.peek(2).type == "=":
+            return self.parse_type_alias()
         if tok.type == "NAME" and tok.value == "match":
             save = self.pos
             try:
@@ -346,6 +350,53 @@ class Parser:
                 break
         body = self.parse_block()
         return N.With(items=items, body=body, is_async=is_async)
+
+    def parse_jab(self):
+        self.advance()
+        # jab main hai: -> if __name__ == "__main__":
+        if self.current().type == "NAME" and self.current().value == "main":
+            if self.peek().type == "IS":
+                self.advance()  # main
+                self.advance()  # hai
+                body = self.parse_block()
+                return N.If(
+                    test=N.Compare(left=N.Name(id="__name__"), ops=["=="],
+                                  comparators=[N.Constant(value='"__main__"')]),
+                    body=body, orelse=[],
+                )
+        # jab ... : -> alias for agar (if)
+        test = self.parse_expression()
+        body = self.parse_block()
+        orelse = []
+        if self.current().type == "ELIF":
+            self.advance()
+            elif_test = self.parse_expression()
+            elif_body = self.parse_block()
+            elif_node = N.If(test=elif_test, body=elif_body, orelse=[])
+            current = elif_node
+            orelse = [elif_node]
+            while self.current().type == "ELIF":
+                self.advance()
+                elif_test2 = self.parse_expression()
+                elif_body2 = self.parse_block()
+                elif_node2 = N.If(test=elif_test2, body=elif_body2, orelse=[])
+                current.orelse = [elif_node2]
+                current = elif_node2
+            if self.current().type == "ELSE":
+                self.advance()
+                current.orelse = self.parse_block()
+        elif self.current().type == "ELSE":
+            self.advance()
+            orelse = self.parse_block()
+        return N.If(test=test, body=body, orelse=orelse)
+
+    def parse_type_alias(self):
+        self.advance()  # prakar
+        name = self.advance().value  # X
+        self.expect("=", "'=' chahiye type alias me", "Expected '=' in type alias")
+        value = self.parse_expression()
+        self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
+        return N.TypeAlias(name=name, value=value)
 
     def parse_try(self):
         self.advance()
