@@ -191,7 +191,10 @@ class Parser:
         return N.Tuple(elts=elts)
 
     def parse_expr_or_assign(self):
-        first = self._parse_star_one()
+        if self.current().type == "*":
+            first = self._parse_star_one()
+        else:
+            first = self.parse_expression()
         tok = self.current()
         if tok.type in self._AUGOPS:
             self.advance()

@@ -454,25 +454,38 @@ def _split_field(field):
     in_str = None
     for i, ch in enumerate(field):
         if in_str:
-            if ch == '\\':
-                continue
             if ch == in_str:
                 in_str = None
             continue
         if ch in ('"', "'"):
             in_str = ch
             continue
-        if ch == '[':
+        if ch in "([{":
             depth += 1
-        elif ch == ']':
-            depth -= 1
-        elif ch == '{':
-            depth += 1
-        elif ch == '}':
+        elif ch in ")]}":
             depth -= 1
         elif ch == ':' and depth == 0:
             return field[:i], field[i + 1:]
     return field, None
+
+def _split_debug(text):
+    depth = 0
+    in_str = None
+    for i, ch in enumerate(text):
+        if in_str:
+            if ch == in_str:
+                in_str = None
+            continue
+        if ch in ('"', "'"):
+            in_str = ch
+            continue
+        if ch in "([{":
+            depth += 1
+        elif ch in ")]}":
+            depth -= 1
+        elif ch == "=" and depth == 0:
+            return text[:i], text[i + 1:]
+    return text, None
 
 def _compile_ffield(field):
     text = field.strip()
@@ -481,11 +494,25 @@ def _compile_ffield(field):
     if m:
         text = m.group(1)
         conversion = "!" + m.group(2)
-    expr_part, spec = _split_field(text)
+    debug_expr, debug_rest = _split_debug(text)
+    if debug_rest is not None:
+        spec = debug_rest
+        if spec.startswith(":"):
+            spec = spec[1:]
+        if spec == "":
+            spec = None
+        expr_part = debug_expr
+        is_debug = True
+    else:
+        expr_part, spec = _split_field(text)
+        is_debug = False
     expr_code = _compile_fragment(expr_part.strip())
     if expr_code is None:
         return field
-    result = "{" + expr_code + conversion
+    result = "{" + expr_code
+    if is_debug:
+        result += "="
+    result += conversion
     if spec is not None:
         spec = _transform_fstring_body(spec)
         result += ":" + spec
