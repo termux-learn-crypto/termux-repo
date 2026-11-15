@@ -2,9 +2,9 @@
 import sys
 from compiler import compile_code
 
-VERSION = "3.4.0"
+VERSION = "3.5.0"
 
-USAGE = """HinglishPy 3.4.0 - Python jaisa, par Hinglish me
+USAGE = """HinglishPy 3.5.0 - Python jaisa, par Hinglish me
 
 Usage:
   hinglishpy                  Interactive REPL (hinglishpy >>> )
@@ -25,33 +25,80 @@ def run_source(source, argv):
     sys.argv = argv
     exec(python_code, {"__name__": "__main__"})
 
+HINGLISH_WORDS = [
+    "agar", "nahito", "warna", "anyatha", "jabtak", "har", "me", "kaam", "varg",
+    "wapas", "koshish", "pakdo", "ant", "lao", "se", "jaise", "todo", "jaari",
+    "chhodo", "badhao", "saath", "banao", "sach", "mitao", "batao", "asink",
+    "intezar", "baishvik", "asthaniye", "bolo", "puchho", "khud",
+    "sahi", "galat", "kuchnahi", "aur", "ya", "nahi", "hai", "lambai",
+    "ginti", "kramank", "yog", "nyuntam", "adhiktam", "pariman", "gol", "ghat",
+    "krambadh", "ulta", "samuh", "suchi", "shabdkosh", "yugm", "shabd", "ank",
+    "akshar", "pehchan", "prakar", "bahar",
+]
+
+try:
+    import readline
+
+    def complete(text, state):
+        matches = [w for w in HINGLISH_WORDS if w.startswith(text)]
+        return matches[state] if state < len(matches) else None
+
+    readline.set_completer(complete)
+    readline.parse_and_bind("tab: complete")
+    readline.set_completer_delims(" \t")
+except Exception:
+    pass
+
 def repl():
     print(f"HinglishPy {VERSION} - Apna Compiler, Poora Hinglish Me")
-    print("Bahar nikalne ke liye: bahar")
+    print("Bahar nikalne ke liye: bahar | Ctrl+C se line cancel")
     print("")
     my_vars = {}
+    pending = []
     while True:
-        try:
-            line = input("hinglishpy >>> ")
-        except (EOFError, KeyboardInterrupt):
-            print("\nAlvida!")
-            break
-        if line.strip() in ["bahar", "exit", "quit"]:
+        if pending:
+            line = pending.pop()
+        else:
+            try:
+                line = input("hinglishpy >>> ")
+            except (EOFError, KeyboardInterrupt):
+                print("\nAlvida!")
+                break
+        stripped = line.strip()
+        if stripped in ["bahar", "exit", "quit"] and not pending:
             print("Alvida!")
             break
-        if line.strip() == "":
+        if stripped == "":
             continue
-        full_code = line
-        if line.strip().endswith(":"):
-            print("... block chal raha hai, khatam karne ke liye khali Enter")
+        if stripped.endswith(":"):
+            lines = [line]
+            first_indent = None
             while True:
                 try:
                     nxt = input("... ")
-                except Exception:
+                except (EOFError, KeyboardInterrupt):
+                    print()
+                    lines = None
                     break
-                if nxt.strip() == "":
+                ns = nxt.strip()
+                nxt_indent = (len(nxt) - len(nxt.lstrip())) if ns else None
+                if nxt_indent is None:
                     break
-                full_code += "\n" + nxt
+                if first_indent is None:
+                    if nxt_indent == 0:
+                        pending.insert(0, nxt)
+                        break
+                    first_indent = nxt_indent
+                elif nxt_indent == 0:
+                    pending.insert(0, nxt)
+                    break
+                lines.append(nxt)
+            if lines is None:
+                print("(cancel)")
+                continue
+            full_code = "\n".join(lines)
+        else:
+            full_code = line
         try:
             python_code = compile_code(full_code)
             exec(python_code, my_vars)

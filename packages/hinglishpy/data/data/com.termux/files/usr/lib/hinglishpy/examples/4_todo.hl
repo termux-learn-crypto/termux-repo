@@ -1,0 +1,6 @@
+# File-based TODO - HinglishPy
+saath kholo("meratodo.txt", "w") jaise f:
+    f.write("HinglishPy master karo\n")
+    f.write("examples run karo\n")
+saath kholo("meratodo.txt", "r") jaise f:
+    bolo f.read()
