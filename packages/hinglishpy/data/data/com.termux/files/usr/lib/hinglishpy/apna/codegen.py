@@ -119,6 +119,8 @@ class Codegen:
             if node.value is None:
                 return "yield"
             return f"yield {self.expr(node.value)}"
+        if isinstance(node, N.YieldFrom):
+            return f"yield from {self.expr(node.value)}"
         if isinstance(node, N.NamedExpr):
             return f"{node.target.id} := {self.expr(node.value)}"
         if isinstance(node, N.BoolOp):
@@ -369,14 +371,15 @@ class Codegen:
         self.emit("try:")
         self.body(node.body, self.indent + 1)
         for handler in node.handlers:
+            prefix = "except* " if handler.star else "except "
             if handler.type is None:
-                self.emit("except:")
+                self.emit(("except*:" if handler.star else "except:"))
             else:
                 exc = self.expr(handler.type)
                 if handler.name:
-                    self.emit(f"except {exc} as {handler.name}:")
+                    self.emit(f"{prefix}{exc} as {handler.name}:")
                 else:
-                    self.emit(f"except {exc}:")
+                    self.emit(f"{prefix}{exc}:")
             self.body(handler.body, self.indent + 1)
         if node.orelse:
             self.emit("else:")

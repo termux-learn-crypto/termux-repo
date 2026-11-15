@@ -120,6 +120,10 @@ class Parser:
             return N.Return(value=value)
         if tok.type == "YIELD":
             self.advance()
+            if self.accept("FROM"):
+                value = self.parse_expression()
+                self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
+                return N.ExprStmt(value=N.YieldFrom(value=value))
             value = None if self.current().type == "NEWLINE" else self.parse_expression_list()
             self.expect("NEWLINE", "Line yahan khatam karni thi", "Expected end of line")
             return N.ExprStmt(value=N.Yield(value=value))
@@ -349,6 +353,7 @@ class Parser:
         handlers = []
         while self.current().type == "EXCEPT":
             self.advance()
+            star = self.accept("*")
             exc_type = None
             name = None
             if self.current().type != ":":
@@ -356,7 +361,7 @@ class Parser:
                 if self.accept("AS"):
                     name = self.expect("NAME", "Naam chahiye 'as' ke baad", "Expected name after as").value
             handler_body = self.parse_block()
-            handlers.append(N.ExceptHandler(type=exc_type, name=name, body=handler_body))
+            handlers.append(N.ExceptHandler(type=exc_type, name=name, body=handler_body, star=bool(star)))
         orelse = []
         if self.current().type == "ELSE":
             self.advance()
