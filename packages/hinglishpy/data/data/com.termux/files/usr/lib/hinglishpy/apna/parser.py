@@ -105,10 +105,12 @@ class Parser:
             return self.parse_while()
         if tok.type in ("FOR", "WITH"):
             return self.parse_for_or_with(is_async=False)
-        if tok.type == "MATCH":
-            return self.parse_match()
-        if tok.type == "CASE":
-            raise HinglishError(tok.line, "case bina match ke nahi aata", "case without match")
+        if tok.type == "NAME" and tok.value == "match":
+            save = self.pos
+            try:
+                return self.parse_match()
+            except HinglishError:
+                self.pos = save
         if tok.type == "TRY":
             return self.parse_try()
         if tok.type == "RETURN":
@@ -905,7 +907,7 @@ class Parser:
     # ---------- match / case ----------
 
     def parse_match(self):
-        self.advance()
+        self.expect("NAME", "match chahiye", "Expected 'match'")
         subject = self.parse_expression()
         self.expect(":", "match subject ke baad ':' chahiye", "Expected ':' after match subject")
         self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
@@ -913,7 +915,7 @@ class Parser:
         self.expect("INDENT", "match ke andar 'case' wali lines chahiye", "Expected indented case blocks")
         self.skip_newlines()
         cases = []
-        while self.current().type == "CASE":
+        while self.current().type == "CASE" or (self.current().type == "NAME" and self.current().value == "case"):
             cases.append(self.parse_case())
             self.skip_newlines()
         if not cases:
@@ -924,7 +926,7 @@ class Parser:
         return N.Match(subject=subject, cases=cases)
 
     def parse_case(self):
-        self.advance()
+        self.expect("NAME", "case chahiye", "Expected 'case'")
         pattern = self.parse_pattern()
         guard = None
         if self.accept("IF"):
