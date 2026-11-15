@@ -1,0 +1,27 @@
+{
+  "grammars": [
+    {
+      "name": "hinglishpy",
+      "camelcase": "HinglishPy",
+      "scope": "source.hinglishpy",
+      "path": ".",
+      "file-types": [
+        "hl"
+      ],
+      "highlights": "queries/highlights.scm"
+    }
+  ],
+  "metadata": {
+    "version": "3.5.0",
+    "license": "MIT",
+    "description": "Tree-sitter grammar for HinglishPy - Python-like syntax with Hinglish keywords",
+    "authors": [
+      {
+        "name": "termux-learn-crypto"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/termux-learn-crypto/termux-repo"
+    }
+  }
+}
