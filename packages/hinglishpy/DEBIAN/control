@@ -1,5 +1,5 @@
-Package: hinglishpy-native
-Version: 1.0.0
+Package: hinglishpy
+Version: 4.0.0
 Architecture: aarch64
 Maintainer: termux-learn-crypto <vilasrmeshram400@gmail.com>
 Section: interpreters
@@ -11,4 +11,4 @@ Description: Native HinglishPy interpreter (C)
  koshish/pakdo/ant (exceptions), batao (generators), match, lambdas,
  list/dict/tuple, f-strings.
  .
- Command: hinglishpy-native file.hl
+ Command: hinglishpy file.hl

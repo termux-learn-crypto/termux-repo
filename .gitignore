@@ -2,3 +2,4 @@ public/
 *.deb
 *.private.asc
 secrets/
+dists/
