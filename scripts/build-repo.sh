@@ -55,6 +55,6 @@ R
     gpg --batch --yes --pinentry-mode loopback --default-key "$GPG_KEY_ID" -abs -o "dists/$SUITE/Release.gpg" "dists/$SUITE/Release"
   fi
 )
-cp assets/*.gpg assets/*.asc install.sh uninstall.sh "$OUT/" 2>/dev/null || true
+cp assets/*.gpg assets/*.asc install.sh uninstall.sh index.html "$OUT/" 2>/dev/null || true
 touch "$OUT/.nojekyll"
 echo "Built repo in $OUT:"; find "$OUT" -type f | sort

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>termux-learn-crypto APT Repository</title>
+<meta name="description" content="Unofficial APT repository for Termux by termux-learn-crypto. One command to add, then pkg install.">
+<style>
+:root { --bg:#0d1117; --panel:#161b22; --border:#30363d; --text:#e6edf3; --muted:#8b949e; --accent:#58a6ff; --accent2:#f78166; --green:#3fb950; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'SF Mono','Fira Code',Consolas,monospace; line-height: 1.65; padding: 40px 20px; }
+.container { max-width: 860px; margin: 0 auto; }
+h1 { font-size: 1.9em; margin-bottom: 6px; }
+h1 .hl { color: var(--accent2); }
+.tagline { color: var(--muted); margin-bottom: 28px; }
+pre { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 16px; overflow-x: auto; margin: 18px 0; }
+code { color: var(--green); }
+h2 { font-size: 1.2em; margin: 28px 0 10px; color: var(--accent); }
+a { color: var(--accent); }
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.95em; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+th { color: var(--muted); }
+.badge { display: inline-block; border: 1px solid var(--border); border-radius: 6px; padding: 1px 8px; color: var(--muted); font-size: 0.85em; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1><span class="hl">termux-learn-crypto</span> APT Repository</h1>
+  <p class="tagline">Apni Termux APT repo — ek command se add karo, phir <code>pkg install</code>.</p>
+
+  <h2>Install (repo add karo)</h2>
+  <pre><code>curl -sL https://github.com/termux-learn-crypto/termux-repo/raw/main/install.sh | bash</code></pre>
+  <p>Ye script sources.list.d me repo add karta hai, GPG key install karta hai, aur <code>apt update</code> chalata hai.</p>
+
+  <h2>Packages install karo</h2>
+  <pre><code>apt update
+apt install hinglishpy-native</code></pre>
+
+  <h2>Packages (<span id="count">37</span>)</h2>
+  <table>
+    <thead><tr><th>Package</th><th>Version</th><th>Kya karta hai</th></tr></thead>
+    <tbody id="pkgs"></tbody>
+  </table>
+
+  <h2>Links</h2>
+  <ul>
+    <li><a href="https://github.com/termux-learn-crypto/termux-repo">GitHub — termux-repo</a></li>
+    <li><a href="https://github.com/termux-learn-crypto/hinglishpy">HinglishPy (language)</a> · <a href="https://termux-learn-crypto.github.io/hinglishpy/">Website</a></li>
+    <li><a href="https://github.com/termux-learn-crypto/termux-repo/raw/main/install.sh">install.sh</a></li>
+  </ul>
+
+  <script>
+  // Package list dists/...Packages se generate nahi hoti is static page me; README sync me rakhi jati hai.
+  const pkgs = [
+    ["hinglishpy-native", "1.0.0", "Native HinglishPy interpreter (C) — zero dependencies"],
+    ["voicestudio", "1.1.0", "VoiceStudio web UI setup"],
+    ["pyaudio-termux", "1.1.0", "PyAudio build for Termux"],
+    ["dvwa-android", "2.1.1-1", "DVWA Android lab installer"],
+    ["termux-ml", "1.5.0", "ML stack (torch, PEFT, Accelerate, TRL, Datasets)"],
+    ["numpy", "1.0.0", "short name for numpy-termux"],
+    ["pytorch", "1.0.0", "short name for pytorch-termux"],
+    ["bitsandbytes", "1.0.0", "short name for bitsandbytes-termux (k-bit quantization)"],
+    ["faiss", "1.0.0", "short name for faiss-termux (vector search)"],
+    ["scikit-learn", "1.0.0", "short name for scikit-learn-termux"],
+    ["scipy", "1.0.0", "short name for scipy-termux"],
+    ["accelerate", "1.0.0", "short name for accelerate-termux"],
+    ["peft", "1.0.0", "short name for peft-termux"],
+    ["datasets", "1.0.0", "short name for datasets-termux"],
+    ["matplotlib-termux", "1.0.0", "matplotlib for Termux"],
+    ["librosa", "1.0.0", "short name for librosa-termux (audio)"],
+    ["soundfile", "1.0.0", "short name for soundfile-termux (audio)"],
+    ["tokenizers-termux", "1.0.0", "Hugging Face tokenizers"],
+    ["transformers-termux", "1.0.0", "Hugging Face transformers"],
+    ["trl-termux", "1.2.0", "TRL fine-tuning"],
+    ["torch", "1.0.0", "short name for pytorch-termux"],
+    ["tensorflow-termux", "1.0.0", "TensorFlow for Termux (glibc)"],
+    ["sklearn", "1.0.0", "scikit-learn alias"],
+  ];
+  const tbody = document.getElementById('pkgs');
+  tbody.innerHTML = pkgs.map(p => `<tr><td><code>${p[0]}</code></td><td>${p[1]}</td><td>${p[2]}</td></tr>`).join('');
+  document.getElementById('count').textContent = pkgs.length;
+  </script>
+</div>
+</body>
+</html>
