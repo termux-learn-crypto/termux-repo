@@ -2,6 +2,8 @@ import sys
 import os
 
 from apna import compile_source
+from apna.importer import add_script_dir
+from apna.runtime import run_with_hinglish_errors
 from apna.errors import HinglishError
 
 def show_error(line_no, line, msg_hinglish, msg_english, suggestion=None):
@@ -30,6 +32,7 @@ def main():
         print("  python compiler.py test.hl run")
         return
     input_file = sys.argv[1]
+    add_script_dir(input_file)
     if not input_file.endswith(".hl"):
         show_error(0, input_file, "File .hl honi chahiye", "File must end with .hl")
     if not os.path.exists(input_file):
@@ -45,7 +48,7 @@ def main():
     print(f"Ho gaya! {input_file} -> {output_file} ban gaya")
     if len(sys.argv) > 2 and sys.argv[2] == "run":
         print("--- Chal raha hai / Running ---\n")
-        exec(python_code, {"__name__": "__main__"})
+        run_with_hinglish_errors(python_code, {"__name__": "__main__"}, {"filename": input_file})
 
 if __name__ == "__main__":
     main()

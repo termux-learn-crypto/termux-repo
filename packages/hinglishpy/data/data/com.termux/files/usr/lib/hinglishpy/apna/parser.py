@@ -3,6 +3,13 @@ from .errors import HinglishError
 from . import nodes as N
 
 class Parser:
+    SOFT_NAME_TYPES = {"IN", "FROM", "AS", "AND", "OR", "NOT", "IS", "FINALLY",
+                        "IMPORT", "WITH", "IF", "ELIF", "ELSE", "WHILE", "FOR",
+                        "DEF", "CLASS", "MATCH", "CASE", "RETURN", "RAISE",
+                        "ASSERT", "DEL", "GLOBAL", "NONLOCAL", "TRY", "EXCEPT",
+                        "YIELD", "PASS", "BREAK", "CONTINUE", "LAMBDA",
+                        "AWAIT", "ASYNC", "PRINT", "JAB"}
+
     def __init__(self, tokens):
         self.tokens = tokens
         self.pos = 0
@@ -83,30 +90,62 @@ class Parser:
             raise HinglishError(tok.line, "Decorator sirf kaam/varg ke upar", "Decorators only on functions/classes")
 
         if tok.type == "JAB":
-            return self.parse_jab()
+            save = self.pos
+            try:
+                return self.parse_jab()
+            except HinglishError:
+                self.pos = save
         if tok.type == "ASYNC":
-            self.advance()
-            nxt = self.current()
-            if nxt.type == "DEF":
-                return self.parse_function(is_async=True)
-            if nxt.type in ("FOR", "WITH"):
-                return self.parse_for_or_with(is_async=True)
-            raise HinglishError(tok.line, "asink ke baad kaam/har/saath chahiye", "Expected kaam/har/saath after asink")
+            save = self.pos
+            try:
+                self.advance()
+                nxt = self.current()
+                if nxt.type == "DEF":
+                    return self.parse_function(is_async=True)
+                if nxt.type in ("FOR", "WITH"):
+                    return self.parse_for_or_with(is_async=True)
+                raise HinglishError(tok.line, "asink ke baad kaam/har/saath chahiye", "Expected kaam/har/saath after asink")
+            except HinglishError:
+                self.pos = save
 
         if tok.type == "DEF":
-            return self.parse_function(is_async=False)
+            save = self.pos
+            try:
+                return self.parse_function(is_async=False)
+            except HinglishError:
+                self.pos = save
         if tok.type == "CLASS":
-            return self.parse_class(decorators=[])
+            save = self.pos
+            try:
+                return self.parse_class(decorators=[])
+            except HinglishError:
+                self.pos = save
         if tok.type == "IF":
             return self.parse_if()
         if tok.type == "ELIF":
-            raise HinglishError(tok.line, "nahito bina agar ke nahi aata", "nahito without agar")
+            save = self.pos
+            try:
+                raise HinglishError(tok.line, "nahito bina agar ke nahi aata", "nahito without agar")
+            except HinglishError:
+                self.pos = save
         if tok.type == "ELSE":
-            raise HinglishError(tok.line, "warna bina agar/jabtak/har/koshish ke nahi aata", "warna without agar/jabtak/har/koshish")
+            save = self.pos
+            try:
+                raise HinglishError(tok.line, "warna bina agar/jabtak/har/koshish ke nahi aata", "warna without agar/jabtak/har/koshish")
+            except HinglishError:
+                self.pos = save
         if tok.type == "WHILE":
-            return self.parse_while()
+            save = self.pos
+            try:
+                return self.parse_while()
+            except HinglishError:
+                self.pos = save
         if tok.type in ("FOR", "WITH"):
-            return self.parse_for_or_with(is_async=False)
+            save = self.pos
+            try:
+                return self.parse_for_or_with(is_async=False)
+            except HinglishError:
+                self.pos = save
         if tok.type == "NAME" and tok.value == "prakar" and self.peek().type == "NAME" and self.peek(2).type == "=":
             return self.parse_type_alias()
         if tok.type == "NAME" and tok.value == "match":
@@ -116,62 +155,110 @@ class Parser:
             except HinglishError:
                 self.pos = save
         if tok.type == "TRY":
-            return self.parse_try()
+            save = self.pos
+            try:
+                return self.parse_try()
+            except HinglishError:
+                self.pos = save
         if tok.type == "RETURN":
-            self.advance()
-            value = None if self.current().type == "NEWLINE" else self.parse_expression_list()
-            self.expect("NEWLINE", "Line yahan khatam karni thi", "Expected end of line")
-            return N.Return(value=value)
-        if tok.type == "YIELD":
-            self.advance()
-            if self.accept("FROM"):
-                value = self.parse_expression()
+            save = self.pos
+            try:
+                self.advance()
+                value = None if self.current().type == "NEWLINE" else self.parse_expression_list()
                 self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
-                return N.ExprStmt(value=N.YieldFrom(value=value))
-            value = None if self.current().type == "NEWLINE" else self.parse_expression_list()
-            self.expect("NEWLINE", "Line yahan khatam karni thi", "Expected end of line")
-            return N.ExprStmt(value=N.Yield(value=value))
-        if tok.type == "BREAK":
-            self.advance(); self.expect("NEWLINE", "Line khatam karo", "Expected end of line"); return N.Break()
-        if tok.type == "CONTINUE":
-            self.advance(); self.expect("NEWLINE", "Line khatam karo", "Expected end of line"); return N.Continue()
-        if tok.type == "PASS":
-            self.advance(); self.expect("NEWLINE", "Line khatam karo", "Expected end of line"); return N.Pass()
-        if tok.type == "ASSERT":
-            self.advance()
-            test = self.parse_expression()
-            msg = None
-            if self.accept(","):
-                msg = self.parse_expression()
-            self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
-            return N.Assert(test=test, msg=msg)
-        if tok.type == "RAISE":
-            self.advance()
-            exc = None
-            if self.current().type != "NEWLINE":
-                exc = self.parse_expression()
-                if self.accept("FROM") or self.current().type == "FROM":
-                    cause = self.parse_expression()
+                return N.Return(value=value)
+            except HinglishError:
+                self.pos = save
+        if tok.type == "YIELD":
+            save = self.pos
+            try:
+                self.advance()
+                if self.accept("FROM"):
+                    value = self.parse_expression()
                     self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
-                    return N.Raise(exc=exc, cause=cause)
-            self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
-            return N.Raise(exc=exc, cause=None)
+                    return N.ExprStmt(value=N.YieldFrom(value=value))
+                value = None if self.current().type == "NEWLINE" else self.parse_expression_list()
+                self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
+                return N.ExprStmt(value=N.Yield(value=value))
+            except HinglishError:
+                self.pos = save
+        if tok.type == "BREAK":
+            save = self.pos
+            try:
+                self.advance(); self.expect("NEWLINE", "Line khatam karo", "Expected end of line"); return N.Break()
+            except HinglishError:
+                self.pos = save
+        if tok.type == "CONTINUE":
+            save = self.pos
+            try:
+                self.advance(); self.expect("NEWLINE", "Line khatam karo", "Expected end of line"); return N.Continue()
+            except HinglishError:
+                self.pos = save
+        if tok.type == "PASS":
+            save = self.pos
+            try:
+                self.advance(); self.expect("NEWLINE", "Line khatam karo", "Expected end of line"); return N.Pass()
+            except HinglishError:
+                self.pos = save
+        if tok.type == "ASSERT":
+            save = self.pos
+            try:
+                self.advance()
+                test = self.parse_expression()
+                msg = None
+                if self.accept(","):
+                    msg = self.parse_expression()
+                self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
+                return N.Assert(test=test, msg=msg)
+            except HinglishError:
+                self.pos = save
+        if tok.type == "RAISE":
+            save = self.pos
+            try:
+                self.advance()
+                exc = None
+                if self.current().type != "NEWLINE":
+                    exc = self.parse_expression()
+                    if self.accept("FROM") or self.current().type == "FROM":
+                        cause = self.parse_expression()
+                        self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
+                        return N.Raise(exc=exc, cause=cause)
+                self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
+                return N.Raise(exc=exc, cause=None)
+            except HinglishError:
+                self.pos = save
         if tok.type == "DEL":
-            self.advance()
-            targets = self.parse_target_list()
-            self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
-            return N.Delete(targets=targets)
+            save = self.pos
+            try:
+                self.advance()
+                targets = self.parse_target_list()
+                self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
+                return N.Delete(targets=targets)
+            except HinglishError:
+                self.pos = save
         if tok.type in ("GLOBAL", "NONLOCAL"):
-            self.advance()
-            names = [self.expect("NAME", "Naam chahiye", "Expected name").value]
-            while self.accept(","):
-                names.append(self.expect("NAME", "Naam chahiye", "Expected name").value)
-            self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
-            return N.Global(names=names) if tok.type == "GLOBAL" else N.Nonlocal(names=names)
+            save = self.pos
+            try:
+                self.advance()
+                names = [self.expect("NAME", "Naam chahiye", "Expected name").value]
+                while self.accept(","):
+                    names.append(self.expect("NAME", "Naam chahiye", "Expected name").value)
+                self.expect("NEWLINE", "Line khatam karo", "Expected end of line")
+                return N.Global(names=names) if tok.type == "GLOBAL" else N.Nonlocal(names=names)
+            except HinglishError:
+                self.pos = save
         if tok.type == "IMPORT":
-            return self.parse_import()
+            save = self.pos
+            try:
+                return self.parse_import()
+            except HinglishError:
+                self.pos = save
         if tok.type == "FROM":
-            return self.parse_from_import()
+            save = self.pos
+            try:
+                return self.parse_from_import()
+            except HinglishError:
+                self.pos = save
         if tok.type == "PRINT":
             self.advance()
             if self.accept("("):
@@ -766,7 +853,7 @@ class Parser:
             self.advance(); node = N.Constant(value="None")
             return self.parse_trailers(node)
 
-        if tok.type == "NAME":
+        if tok.type == "NAME" or tok.type in self.SOFT_NAME_TYPES:
             self.advance()
             node = N.Name(id=tok.value)
             return self.parse_trailers(node)

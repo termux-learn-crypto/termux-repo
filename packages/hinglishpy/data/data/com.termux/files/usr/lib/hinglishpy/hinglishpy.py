@@ -1,6 +1,9 @@
 # HinglishPy CLI - hinglishpy command
 import sys
+import os
 from compiler import compile_code
+from apna.importer import add_script_dir
+from apna.runtime import run_with_hinglish_errors
 
 VERSION = "3.6.0"
 
@@ -20,10 +23,10 @@ Examples:
   hinglishpy -c 'bolo ginti(5)'
 """
 
-def run_source(source, argv):
+def run_source(source, argv, filename=None):
     python_code = compile_code(source)
     sys.argv = argv
-    exec(python_code, {"__name__": "__main__"})
+    run_with_hinglish_errors(python_code, {"__name__": "__main__"}, {"filename": filename or "<c>"})
 
 HINGLISH_WORDS = [
     "agar", "nahito", "warna", "anyatha", "jabtak", "har", "me", "kaam", "varg",
@@ -101,15 +104,16 @@ def repl():
             full_code = line
         try:
             python_code = compile_code(full_code)
-            exec(python_code, my_vars)
+            run_with_hinglish_errors(python_code, my_vars, {})
         except SystemExit:
             continue
-        except Exception as e:
+        except BaseException as e:
             print(f"Galti / Error: {e}")
 
 def main():
     args = sys.argv[1:]
     if not args:
+        add_script_dir(os.getcwd())
         repl()
         return
     if args[0] in ("-h", "--help"):
@@ -122,7 +126,8 @@ def main():
         if len(args) < 2:
             print("hinglishpy: -c requires an argument")
             sys.exit(2)
-        run_source(args[1], ["-c"] + args[2:])
+        add_script_dir(os.getcwd())
+        run_source(args[1], ["-c"] + args[2:], "-c")
         return
     script = args[0]
     if not script.endswith(".hl"):
@@ -135,7 +140,8 @@ def main():
     except FileNotFoundError:
         print(f"hinglishpy: File nahi mili - {script}")
         sys.exit(2)
-    run_source(source, [script] + args[1:])
+    add_script_dir(script)
+    run_source(source, [script] + args[1:], script)
 
 if __name__ == "__main__":
     main()
