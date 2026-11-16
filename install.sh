@@ -34,7 +34,7 @@ fi
 
 step "Adding repository / repo add ho raha hai"
 mkdir -p "$PREFIX/etc/apt/sources.list.d" "$PREFIX/etc/apt/trusted.gpg.d"
-echo "deb [arch=all] ${REPO_URL} ${NAME} main" > "$PREFIX/etc/apt/sources.list.d/${NAME}.list"
+echo "deb [arch=all,aarch64] ${REPO_URL} ${NAME} main" > "$PREFIX/etc/apt/sources.list.d/${NAME}.list"
 ok "Wrote $PREFIX/etc/apt/sources.list.d/${NAME}.list"
 
 step "Installing GPG key / signing key install ho rahi hai"

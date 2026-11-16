@@ -16,7 +16,7 @@ curl -sL https://github.com/termux-learn-crypto/termux-repo/raw/main/install.sh 
 
 Ye script / This script:
 - writes `$PREFIX/etc/apt/sources.list.d/termux-learn-crypto.list`
-  (`deb [arch=all] https://termux-learn-crypto.github.io/termux-repo termux-learn-crypto main`)
+  (`deb [arch=all,aarch64] https://termux-learn-crypto.github.io/termux-repo termux-learn-crypto main`)
 - enables **tur-repo** (needed for tokenizers) and **termux-glibc** (needed for tensorflow-termux)
 - installs the signing key to `$PREFIX/etc/apt/trusted.gpg.d/termux-learn-crypto.gpg`
 - runs `apt update`
@@ -24,7 +24,7 @@ Ye script / This script:
 Manual setup (bina script ke):
 
 ```bash
-echo "deb [arch=all] https://termux-learn-crypto.github.io/termux-repo termux-learn-crypto main" > $PREFIX/etc/apt/sources.list.d/termux-learn-crypto.list
+echo "deb [arch=all,aarch64] https://termux-learn-crypto.github.io/termux-repo termux-learn-crypto main" > $PREFIX/etc/apt/sources.list.d/termux-learn-crypto.list
 curl -sL https://github.com/termux-learn-crypto/termux-repo/raw/main/assets/termux-learn-crypto.gpg -o $PREFIX/etc/apt/trusted.gpg.d/termux-learn-crypto.gpg
 apt install -y tur-repo glibc-repo   # tokenizers / tensorflow-termux need these
 apt update
@@ -47,7 +47,7 @@ apt install dvwa-android     # then: dvwa-android (opens the APK installer)
 | `voicestudio` | 1.1.0 | `voicestudio`, `voicestudio-setup` | apt installs python, torch, torchaudio, ffmpeg, rust etc.; install step clones [VoiceStudio](https://github.com/termux-learn-crypto/VoiceStudio) (termux branch) into `~/VoiceStudio` with venv + web UI. First install 15-30 min (pydantic-core Rust compile) - phone charge pe rakho. |
 | `pyaudio-termux` | 1.1.0 | `start-audio`, `pyaudio-test`, `pyaudio-setup` | apt installs portaudio, pulseaudio, clang, python; install step builds PyAudio ([pyaudio-termux](https://github.com/termux-learn-crypto/pyaudio-termux)). |
 | `dvwa-android` | 2.1.1-1 | `dvwa-android` | Install step downloads the [DVWA Android](https://github.com/termux-learn-crypto/dvwa-android) v2.1.1 APK to `~/dvwa-android`; `dvwa-android` opens the Android installer. |
-| `hinglishpy` | 3.4.0 | `hinglishpy` | HinglishPy - Python jaisa, par Hinglish keywords (`agar`, `warna`, `jabtak`, `har` …); apna compiler (desugar → Python). `hinglishpy script.hl` chalao ya interactive REPL. |
+| `hinglishpy-native` | 1.0.0 | `hinglishpy-native` | Native HinglishPy interpreter, C me likha (zero dependencies, Python nahi chahiye). Python jaisa, Hinglish keywords (`agar`, `warna`, `jabtak`, `har` …). `hinglishpy-native file.hl` chalata hai. |
 
 ### Machine learning (ML) packages
 

@@ -7,32 +7,39 @@ COMP="${COMPONENT:-main}"
 OUT="${OUT:-public}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
-rm -rf "$OUT"; mkdir -p "$OUT/pool/$COMP" "$OUT/dists/$SUITE/$COMP/binary-all"
+rm -rf "$OUT"; mkdir -p "$OUT/pool/$COMP" "$OUT/dists/$SUITE/$COMP/binary-all" "$OUT/dists/$SUITE/$COMP/binary-aarch64"
 
 for dir in packages/*/; do
   [ -f "$dir/DEBIAN/control" ] || continue
   find "$dir" -type d -exec chmod 755 {} +
   find "$dir/data" -type f -path '*/bin/*' -exec chmod 755 {} + 2>/dev/null || true
   for s in postinst preinst postrm prerm; do [ -f "$dir/DEBIAN/$s" ] && chmod 755 "$dir/DEBIAN/$s"; done
-  dpkg-deb --build --root-owner-group -Zxz "$dir" "$OUT/pool/$COMP/"
+  dpkg-deb --build --root-owner-group -Zxz "$dir" "$OUT/pool/$COMP/" >/dev/null
 done
 
 ( cd "$OUT"
-  dpkg-scanpackages --multiversion --arch all "pool/$COMP" /dev/null > "dists/$SUITE/$COMP/binary-all/Packages"
+  dpkg-scanpackages --multiversion --arch all "pool/$COMP" /dev/null > "dists/$SUITE/$COMP/Packages"
+  # Architecture ke hisaab se split karo: binary-all me sirf all, binary-aarch64 me sirf aarch64
+  awk 'BEGIN { RS = "\\n\\n"; ORS = "\\n\\n" } /Architecture: all\n/ { print }' "dists/$SUITE/$COMP/Packages" > "dists/$SUITE/$COMP/binary-all/Packages"
+  awk 'BEGIN { RS = "\\n\\n"; ORS = "\\n\\n" } /Architecture: aarch64\n/ { print }' "dists/$SUITE/$COMP/Packages" > "dists/$SUITE/$COMP/binary-aarch64/Packages"
+  rm "dists/$SUITE/$COMP/Packages"
   gzip -9nk "dists/$SUITE/$COMP/binary-all/Packages"
-  cat > "dists/$SUITE/$COMP/binary-all/Release" <<R
+  gzip -9nk "dists/$SUITE/$COMP/binary-aarch64/Packages"
+  for arch in all aarch64; do
+    cat > "dists/$SUITE/$COMP/binary-$arch/Release" <<R
 Archive: $SUITE
 Component: $COMP
 Origin: termux-learn-crypto
 Label: termux-learn-crypto
-Architecture: all
+Architecture: $arch
 R
+  done
   apt-ftparchive \
     -o APT::FTPArchive::Release::Origin="termux-learn-crypto" \
     -o APT::FTPArchive::Release::Label="termux-learn-crypto" \
     -o APT::FTPArchive::Release::Suite="$SUITE" \
     -o APT::FTPArchive::Release::Codename="$SUITE" \
-    -o APT::FTPArchive::Release::Architectures="all" \
+    -o APT::FTPArchive::Release::Architectures="all aarch64" \
     -o APT::FTPArchive::Release::Components="$COMP" \
     -o APT::FTPArchive::Release::Description="termux-learn-crypto Termux APT repository" \
     release "dists/$SUITE" > /tmp/Release

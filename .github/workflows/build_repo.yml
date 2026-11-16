@@ -44,9 +44,11 @@ jobs:
           gpg --verify public/dists/termux-learn-crypto/Release.gpg public/dists/termux-learn-crypto/Release
           for c in packages/*/DEBIAN/control; do
             n=$(awk -F': ' '/^Package:/{print $2; exit}' "$c")
-            grep -q "^Package: $n$" public/dists/termux-learn-crypto/main/binary-all/Packages || { echo "missing $n"; exit 1; }
+            a=$(awk -F': ' '/^Architecture:/{print $2; exit}' "$c")
+            grep -q "^Package: $n$" "public/dists/termux-learn-crypto/main/binary-$a/Packages" || { echo "missing $n in binary-$a"; exit 1; }
           done
-          cat public/dists/termux-learn-crypto/main/binary-all/Packages
+          echo "---- binary-all ----" && cat public/dists/termux-learn-crypto/main/binary-all/Packages
+          echo "---- binary-aarch64 ----" && cat public/dists/termux-learn-crypto/main/binary-aarch64/Packages
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

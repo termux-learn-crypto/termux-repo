@@ -1,4 +1,0 @@
-# Hello World - HinglishPy
-bolo "Hello! Namaste duniya!"
-naam = puchho("Apna naam kya hai? ")
-bolo f"Achha, tum {naam} ho!"

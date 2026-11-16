@@ -1,2 +1,0 @@
-#!/data/data/com.termux/files/usr/bin/bash
-exec python /data/data/com.termux/files/usr/lib/hinglishpy/hinglishpy.py "$@"
