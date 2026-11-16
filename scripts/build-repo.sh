@@ -18,7 +18,7 @@ for dir in packages/*/; do
 done
 
 ( cd "$OUT"
-  dpkg-scanpackages --multiversion --arch all "pool/$COMP" /dev/null > "dists/$SUITE/$COMP/Packages"
+  dpkg-scanpackages --multiversion "pool/$COMP" /dev/null > "dists/$SUITE/$COMP/Packages"
   # Architecture ke hisaab se split karo (mawk-compatible: line-based, regex RS nahi)
   for arch in all aarch64; do
     awk -v want="$arch" '
