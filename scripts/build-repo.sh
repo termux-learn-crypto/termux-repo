@@ -19,9 +19,15 @@ done
 
 ( cd "$OUT"
   dpkg-scanpackages --multiversion --arch all "pool/$COMP" /dev/null > "dists/$SUITE/$COMP/Packages"
-  # Architecture ke hisaab se split karo: binary-all me sirf all, binary-aarch64 me sirf aarch64
-  awk 'BEGIN { RS = "\\n\\n"; ORS = "\\n\\n" } /Architecture: all\n/ { print }' "dists/$SUITE/$COMP/Packages" > "dists/$SUITE/$COMP/binary-all/Packages"
-  awk 'BEGIN { RS = "\\n\\n"; ORS = "\\n\\n" } /Architecture: aarch64\n/ { print }' "dists/$SUITE/$COMP/Packages" > "dists/$SUITE/$COMP/binary-aarch64/Packages"
+  # Architecture ke hisaab se split karo (mawk-compatible: line-based, regex RS nahi)
+  for arch in all aarch64; do
+    awk -v want="$arch" '
+      BEGIN { buf = ""; cur = "" }
+      /^$/ { if (cur == want && buf != "") printf "%s\n", buf; buf = ""; cur = ""; next }
+      { buf = buf $0 "\n"; if (index($0, "Architecture: ") == 1) cur = substr($0, 15) }
+      END { if (cur == want && buf != "") printf "%s\n", buf }
+    ' "dists/$SUITE/$COMP/Packages" > "dists/$SUITE/$COMP/binary-$arch/Packages"
+  done
   rm "dists/$SUITE/$COMP/Packages"
   gzip -9nk "dists/$SUITE/$COMP/binary-all/Packages"
   gzip -9nk "dists/$SUITE/$COMP/binary-aarch64/Packages"
