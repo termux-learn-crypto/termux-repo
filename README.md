@@ -20,6 +20,7 @@ Ye script / This script:
 - enables **tur-repo** (needed for tokenizers) and **termux-glibc** (needed for tensorflow-termux)
 - installs the signing key to `$PREFIX/etc/apt/trusted.gpg.d/termux-learn-crypto.gpg`
 - runs `apt update`
+- **installs `hinglishpy`** automatically (override with `--no-install` not available yet; just `apt remove hinglishpy` if not wanted)
 
 Manual setup (bina script ke):
 
