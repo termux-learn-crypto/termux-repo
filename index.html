@@ -32,10 +32,6 @@ th { color: var(--muted); }
   <pre><code>curl -sL https://github.com/termux-learn-crypto/termux-repo/raw/main/install.sh | bash</code></pre>
   <p>Ye script sources.list.d me repo add karta hai, GPG key install karta hai, aur <code>apt update</code> chalata hai.</p>
 
-  <h2>Packages install karo</h2>
-  <pre><code>apt update
-apt install hinglishpy</code></pre>
-
   <h2>Packages (<span id="count">37</span>)</h2>
   <table>
     <thead><tr><th>Package</th><th>Version</th><th>Kya karta hai</th></tr></thead>
@@ -45,14 +41,12 @@ apt install hinglishpy</code></pre>
   <h2>Links</h2>
   <ul>
     <li><a href="https://github.com/termux-learn-crypto/termux-repo">GitHub — termux-repo</a></li>
-    <li><a href="https://github.com/termux-learn-crypto/hinglishpy">HinglishPy (language)</a> · <a href="https://termux-learn-crypto.github.io/hinglishpy/">Website</a></li>
     <li><a href="https://github.com/termux-learn-crypto/termux-repo/raw/main/install.sh">install.sh</a></li>
   </ul>
 
   <script>
   // Package list dists/...Packages se generate nahi hoti is static page me; README sync me rakhi jati hai.
   const pkgs = [
-    ["hinglishpy", "4.4.0", "Native HinglishPy interpreter (C) — zero dependencies"],
     ["voicestudio", "1.1.0", "VoiceStudio web UI setup"],
     ["pyaudio-termux", "1.1.0", "PyAudio build for Termux"],
     ["dvwa-android", "2.1.1-1", "DVWA Android lab installer"],

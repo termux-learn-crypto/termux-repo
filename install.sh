@@ -44,15 +44,7 @@ ok "Key saved to $PREFIX/etc/apt/trusted.gpg.d/${NAME}.gpg"
 step "apt update"
 apt update -y || die "apt update failed"
 
-step "Installing hinglishpy (native Hinglish interpreter)"
-if apt install -y hinglishpy; then
-  ok "hinglishpy installed — 'hinglishpy hello.hl' se chalao"
-else
-  echo -e "${Y}[!] hinglishpy install failed — manually: apt install hinglishpy${N}"
-fi
-
 ok "Done! Ab install karo:"
-echo -e "${C}  apt install hinglishpy       # HinglishPy (native, C interpreter)${N}"
 echo -e "${C}  apt install voicestudio${N}"
 echo -e "${C}  apt install pyaudio-termux${N}"
 echo -e "${C}  apt install dvwa-android${N}"
